@@ -36,7 +36,7 @@ const allProducts = [
   },
   {
     name: 'Refurbished Smartwatch',
-    img: './assets/smartwatch.jpg',
+    img: './assets/watch.jpg',
     condition: 'Good',
     confidence: '85%',
     co2Saved: 3,

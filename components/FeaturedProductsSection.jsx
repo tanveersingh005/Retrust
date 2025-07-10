@@ -11,7 +11,7 @@ const products = [
   {
     name: 'Refurbished Smartwatch',
     desc: 'Latest smartwatch, fully restored',
-    img: './assets/smartwatch.jpg',
+    img: './assets/watch.jpg',
     condition: 'Good',
     badgeColor: 'bg-yellow-100 text-yellow-700',
   },
