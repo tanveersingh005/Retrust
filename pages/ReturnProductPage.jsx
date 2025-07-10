@@ -4,40 +4,64 @@ import ReturnForm from '../components/ReturnForm';
 import ImageUploader from '../components/ImageUploader';
 import MLPredictionCard from '../components/MLPredictionCard';
 import ImpactSection from '../components/ImpactSection';
-
-// Simple CO2 and credits logic for demo
-const getImpactStats = (form) => {
-  if (!form) return { co2: 0, progress: 0, credits: 0, smartDecision: 'Resell' };
-  let co2 = 5;
-  let credits = 100;
-  let progress = 30;
-  let smartDecision = 'Resell';
-  if (form.category && form.category.toLowerCase().includes('jeans')) { co2 += 7; credits += 50; progress += 10; }
-  if (form.category && form.category.toLowerCase().includes('jacket')) { co2 += 10; credits += 80; progress += 20; }
-  if (form.condition === 'Excellent') { credits += 50; progress += 10; }
-  if (form.images && form.images.length > 1) { credits += 20 * (form.images.length - 1); progress += 5 * (form.images.length - 1); }
-  if (form.productType === 'Electronics') { co2 += 12; credits += 100; progress += 20; smartDecision = 'Recycle'; }
-  if (form.productType === 'Clothing') { smartDecision = 'Resell'; }
-  if (form.productType === 'Accessories') { smartDecision = 'Donate'; }
-  if (progress > 100) progress = 100;
-  return { co2, credits, progress, smartDecision };
-};
+import axios from 'axios';
+import { useAuth } from '../context/useAuth';
 
 const ReturnProductPage = () => {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState(null);
+  const [impact, setImpact] = useState(null);
+  const [returnId, setReturnId] = useState(null);
+  const [redeemed, setRedeemed] = useState(false);
+  const { token } = useAuth();
 
-  const handleSubmit = (data) => {
+  const handleSubmit = async (data) => {
     setFormData(data);
-    setSubmitted(true);
+    // Prepare images as URLs or base64 strings
+    const images = (data.images || []).map(img => img.url || img);
+    try {
+      const res = await axios.post('/api/returns', {
+        item: data.category,
+        condition: data.condition,
+        images,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setImpact({
+        co2: res.data.co2Saved,
+        credits: res.data.credits,
+        status: res.data.status,
+        id: res.data._id,
+        condition: res.data.condition,
+        item: res.data.item,
+      });
+      setReturnId(res.data._id);
+      setSubmitted(true);
+    } catch {
+      alert('Failed to submit return.');
+    }
   };
 
   const handleReset = () => {
     setFormData(null);
     setSubmitted(false);
+    setImpact(null);
+    setReturnId(null);
+    setRedeemed(false);
   };
 
-  const impact = getImpactStats(formData);
+  const handleRedeem = async () => {
+    if (!returnId) return;
+    try {
+      await axios.post(`/api/returns/${returnId}/redeem`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setRedeemed(true);
+      alert('Credits redeemed!');
+    } catch {
+      alert('Failed to redeem credits.');
+    }
+  };
 
   return (
     <>
@@ -57,21 +81,30 @@ const ReturnProductPage = () => {
               </div>
               <MLPredictionCard
                 image={formData?.images?.[0]?.url || './src/assets/tshirt.jpg'}
-                condition={formData?.condition || 'Good'}
+                condition={impact?.condition || 'Good'}
               />
               <div className="my-8 flex items-center justify-center">
                 <div className="w-full max-w-xl border-t border-gray-200" />
               </div>
               <ImpactSection
-                co2={impact.co2}
-                smartDecision={impact.smartDecision}
-                progress={impact.progress}
-                credits={impact.credits}
+                co2={impact?.co2}
+                smartDecision={impact?.item}
+                progress={impact?.co2}
+                credits={impact?.credits}
                 animate={true}
               />
-              <div className="flex justify-center mt-8">
+              <div className="flex flex-col items-center mt-8 gap-4">
+                {!redeemed && (
+                  <button
+                    className="px-6 py-3 rounded-lg bg-[#2e7d32] text-white font-bold border border-[#2e7d32] shadow hover:bg-[#256427] transition-colors duration-200"
+                    onClick={handleRedeem}
+                  >
+                    Redeem Credits
+                  </button>
+                )}
+                {redeemed && <div className="text-green-700 font-bold">Credits redeemed and added to your account!</div>}
                 <button
-                  className="px-6 py-3 rounded-lg bg-[#2e7d32] text-white font-bold border border-[#2e7d32] shadow hover:bg-[#256427] transition-colors duration-200"
+                  className="px-6 py-3 rounded-lg bg-gray-200 text-gray-700 font-bold border border-gray-300 shadow hover:bg-gray-300 transition-colors duration-200"
                   onClick={handleReset}
                 >
                   Submit Another Item

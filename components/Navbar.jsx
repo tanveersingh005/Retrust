@@ -54,7 +54,7 @@ const Navbar = ({ onSignInClick }) => {
           <div className="relative ml-4 group">
             <button className="w-11 h-11 rounded-full border-2 border-green-200 flex items-center justify-center focus:outline-none focus:ring">
               <img
-                src={user.avatar}
+                src={user.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}
                 alt={user.name}
                 className="w-10 h-10 rounded-full object-cover"
               />

@@ -5,13 +5,13 @@ const options = [
     title: 'Eco-Delivery',
     desc: 'Use 100 credits for free eco-friendly shipping on your next purchase.',
     credits: 100,
-    img: './src/assets/eco-delivery.jpg',
+    img: './assets/eco-delivery.jpg',
   },
   {
     title: 'Cashback',
     desc: 'Redeem 200 credits for a $10 cashback on your next purchase.',
     credits: 200,
-    img: './src/assets/cashback.jpg',
+    img: './assets/cashback.jpg',
   },
 ];
 

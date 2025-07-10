@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const bgImage = './src/assets/hero-bg.jpg'; // Place your image in src/assets/ and use this path
+const bgImage = './assets/hero-bg.jpg'; // Place your image in src/assets/ and use this path
 
 const HeroBanner = () => (
   <section className="relative flex flex-col items-center justify-center text-center py-16 md:py-24 rounded-3xl shadow-lg overflow-hidden animate-fade-in-up min-h-[400px] md:min-h-[520px]">

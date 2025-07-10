@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-const LevelProgress = ({ level = 3, progress = 75, nextLevel = 4 }) => {
+const LevelProgress = ({ level = 3, progress = 75, nextLevel = 4, label = 'Eco-Champion' }) => {
   const progressRef = useRef();
   useEffect(() => {
     if (progressRef.current) {
@@ -15,7 +15,7 @@ const LevelProgress = ({ level = 3, progress = 75, nextLevel = 4 }) => {
   return (
     <div className="mb-8 animate-fade-in-up">
       <div className="flex items-center gap-4 mb-1">
-        <span className="font-semibold text-base text-gray-800">Level {level}: Eco-Champion</span>
+        <span className="font-semibold text-base text-gray-800">Level {level}: {label}</span>
         <span className="ml-auto text-sm text-gray-500">{progress}%</span>
       </div>
       <div className="w-full h-2 bg-[#e3eaf2] rounded-full mb-1 overflow-hidden">

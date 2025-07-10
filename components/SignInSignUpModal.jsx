@@ -4,16 +4,16 @@ import { useAuth } from '../context/useAuth';
 const initialForm = { name: '', email: '', password: '' };
 
 const SignInSignUpModal = ({ open, onClose }) => {
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, error: contextError, loading } = useAuth();
   const [mode, setMode] = useState('signin');
   const [form, setForm] = useState(initialForm);
-  const [error, setError] = useState('');
+  const [localError, setLocalError] = useState('');
 
   useEffect(() => {
     if (open) {
       setMode('signin');
       setForm(initialForm);
-      setError('');
+      setLocalError('');
     }
   }, [open]);
 
@@ -23,16 +23,18 @@ const SignInSignUpModal = ({ open, onClose }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    setError('');
+    setLocalError('');
     if (mode === 'signin') {
-      if (!form.email || !form.password) return setError('Please enter email and password.');
-      signIn(form.email, form.password);
+      if (!form.email || !form.password) return setLocalError('Please enter email and password.');
+      const success = await signIn(form.email, form.password);
+      if (!success) return setLocalError(contextError || 'Login failed.');
       onClose();
     } else {
-      if (!form.name || !form.email || !form.password) return setError('Please fill all fields.');
-      signUp(form.name, form.email, form.password);
+      if (!form.name || !form.email || !form.password) return setLocalError('Please fill all fields.');
+      const success = await signUp(form.name, form.email, form.password);
+      if (!success) return setLocalError(contextError || 'Registration failed.');
       onClose();
     }
   };
@@ -45,7 +47,7 @@ const SignInSignUpModal = ({ open, onClose }) => {
           <span className="text-xl font-bold mb-2">{mode === 'signin' ? 'Sign In' : 'Sign Up'}</span>
           <button
             className="text-blue-500 text-sm hover:underline"
-            onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(''); }}
+            onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setLocalError(''); }}
           >
             {mode === 'signin' ? "Don't have an account? Sign Up" : 'Already have an account? Sign In'}
           </button>
@@ -76,7 +78,8 @@ const SignInSignUpModal = ({ open, onClose }) => {
             onChange={handleChange}
             className="px-4 py-2 rounded border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-100"
           />
-          {error && <div className="text-red-500 text-sm">{error}</div>}
+          {(localError || contextError) && <div className="text-red-500 text-sm">{localError || contextError}</div>}
+          {loading && <div className="text-blue-500 text-sm">Loading...</div>}
           <button
             type="submit"
             className="mt-2 px-4 py-2 rounded bg-[#2196f3] text-white font-semibold hover:bg-[#1769aa] transition-colors"

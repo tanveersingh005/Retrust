@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+const markerIcon = new L.Icon({
+  iconUrl: '/assets/marker-icon.png',
+  shadowUrl: '/assets/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
 
 // Helper to update map center
 function ChangeMapView({ center }) {
@@ -52,7 +62,7 @@ const PartnerMap = ({ location, setLocation }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution="" // Remove text, but see note above
         />
-        <Marker position={center}>
+        <Marker position={center} icon={markerIcon}>
           <Popup>
             Selected Location
           </Popup>

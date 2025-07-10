@@ -5,6 +5,7 @@ import { HiOutlineHome } from "react-icons/hi2";
 import { TbRecycle } from "react-icons/tb";
 import { useNavigate, useLocation, Routes, Route } from "react-router-dom";
 import Footer from "../components/Footer";
+import axios from 'axios';
 
 const sidebarItems = [
   {
@@ -67,7 +68,7 @@ const EditProfileSection = () => {
       <h1 className="text-3xl font-bold mb-8">Edit Profile</h1>
       <form className="max-w-xl flex flex-col gap-6">
         <div className="flex items-center gap-6 mb-2">
-          <img src={avatarPreview} alt="Avatar Preview" className="w-20 h-20 rounded-full object-cover border-4 border-[#e3eae3]" />
+          <img src={avatarPreview || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} alt="Avatar Preview" className="w-20 h-20 rounded-full object-cover border-4 border-[#e3eae3]" />
           <label className="block">
             <span className="sr-only">Choose profile photo</span>
             <input type="file" accept="image/*" onChange={handleAvatarChange} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e6f4ea] file:text-gray-700 hover:file:bg-[#cde9d6]" />
@@ -98,7 +99,37 @@ const EditProfileSection = () => {
   );
 };
 
-const MyCreditsSection = () => (
+const MyCreditsSection = () => {
+  const { user, updateCreditHistory } = useAuth();
+  const [item, setItem] = useState('');
+  const [date, setDate] = useState('');
+  const [co2Impact, setCo2Impact] = useState('');
+  const [credits, setCredits] = useState('');
+  const [redeemItem, setRedeemItem] = useState('');
+  const [redeemDate, setRedeemDate] = useState('');
+  const [redeemCredits, setRedeemCredits] = useState('');
+
+  const handleAddHistory = async (e) => {
+    e.preventDefault();
+    const newHistory = [
+      ...(user.creditHistory || []),
+      { item, date, co2Impact, credits: Number(credits) }
+    ];
+    await updateCreditHistory({ creditHistory: newHistory });
+    setItem(''); setDate(''); setCo2Impact(''); setCredits('');
+  };
+
+  const handleAddRedeem = async (e) => {
+    e.preventDefault();
+    const newRedeemed = [
+      ...(user.redeemedCredits || []),
+      { item: redeemItem, date: redeemDate, credits: Number(redeemCredits) }
+    ];
+    await updateCreditHistory({ redeemedCredits: newRedeemed });
+    setRedeemItem(''); setRedeemDate(''); setRedeemCredits('');
+  };
+
+  return (
     <div>
       <h1 className="text-3xl font-bold mb-8">My Credits</h1>
       {/* Total Credits Card */}
@@ -108,7 +139,7 @@ const MyCreditsSection = () => (
             <svg className="w-8 h-8 text-green-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M12 6v6l4 2" /></svg>
           </div>
           <div>
-            <div className="text-4xl font-extrabold text-gray-900">150</div>
+            <div className="text-4xl font-extrabold text-gray-900">{user?.credits || 0}</div>
             <div className="text-gray-600 font-medium">Total Credits</div>
           </div>
         </div>
@@ -118,6 +149,13 @@ const MyCreditsSection = () => (
         {/* Credit History */}
         <div>
           <h2 className="text-xl font-bold mb-2">Credit History</h2>
+          <form className="mb-4 flex flex-col gap-2" onSubmit={handleAddHistory}>
+            <input placeholder="Item" value={item} onChange={e => setItem(e.target.value)} className="border rounded px-2 py-1" />
+            <input placeholder="Date" value={date} onChange={e => setDate(e.target.value)} className="border rounded px-2 py-1" />
+            <input placeholder="CO₂ Impact" value={co2Impact} onChange={e => setCo2Impact(e.target.value)} className="border rounded px-2 py-1" />
+            <input placeholder="Credits" value={credits} onChange={e => setCredits(e.target.value)} className="border rounded px-2 py-1" />
+            <button type="submit" className="bg-green-500 text-white rounded px-3 py-1">Add</button>
+          </form>
           <div className="overflow-x-auto rounded-2xl shadow bg-white border border-gray-100">
             <table className="min-w-full">
               <thead>
@@ -129,24 +167,14 @@ const MyCreditsSection = () => (
                 </tr>
               </thead>
               <tbody>
-                <tr className="hover:bg-green-50">
-                  <td className="px-4 py-3">Recycled Denim Jeans</td>
-                  <td className="px-4 py-3 text-blue-600">July 15, 2024</td>
-                  <td className="px-4 py-3">Saved 5kg CO₂</td>
-                  <td className="px-4 py-3 font-bold text-green-600">+50</td>
-                </tr>
-                <tr className="hover:bg-green-50">
-                  <td className="px-4 py-3">Sold Vintage Leather Jacket</td>
-                  <td className="px-4 py-3 text-blue-600">June 20, 2024</td>
-                  <td className="px-4 py-3">Saved 10kg CO₂</td>
-                  <td className="px-4 py-3 font-bold text-green-600">+100</td>
-                </tr>
-                <tr className="hover:bg-red-50">
-                  <td className="px-4 py-3">Purchased Upcycled T-Shirt</td>
-                  <td className="px-4 py-3 text-blue-600">May 5, 2024</td>
-                  <td className="px-4 py-3">Reduced 2kg CO₂</td>
-                  <td className="px-4 py-3 font-bold text-red-500">-20</td>
-                </tr>
+                {(user.creditHistory || []).map((row, i) => (
+                  <tr key={i} className="hover:bg-green-50">
+                    <td className="px-4 py-3">{row.item}</td>
+                    <td className="px-4 py-3 text-blue-600">{row.date}</td>
+                    <td className="px-4 py-3">{row.co2Impact}</td>
+                    <td className="px-4 py-3 font-bold text-green-600">{row.credits > 0 ? '+' : ''}{row.credits}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -154,6 +182,12 @@ const MyCreditsSection = () => (
         {/* Redeemed Credits */}
         <div>
           <h2 className="text-xl font-bold mb-2">Redeemed Credits</h2>
+          <form className="mb-4 flex flex-col gap-2" onSubmit={handleAddRedeem}>
+            <input placeholder="Item" value={redeemItem} onChange={e => setRedeemItem(e.target.value)} className="border rounded px-2 py-1" />
+            <input placeholder="Date" value={redeemDate} onChange={e => setRedeemDate(e.target.value)} className="border rounded px-2 py-1" />
+            <input placeholder="Credits" value={redeemCredits} onChange={e => setRedeemCredits(e.target.value)} className="border rounded px-2 py-1" />
+            <button type="submit" className="bg-yellow-500 text-white rounded px-3 py-1">Add</button>
+          </form>
           <div className="overflow-x-auto rounded-2xl shadow bg-white border border-gray-100">
             <table className="min-w-full">
               <thead>
@@ -164,16 +198,13 @@ const MyCreditsSection = () => (
                 </tr>
               </thead>
               <tbody>
-                <tr className="hover:bg-yellow-50">
-                  <td className="px-4 py-3">Discount on Sustainable Sneakers</td>
-                  <td className="px-4 py-3 text-blue-600">August 1, 2024</td>
-                  <td className="px-4 py-3 font-bold text-yellow-600">-30</td>
-                </tr>
-                <tr className="hover:bg-yellow-50">
-                  <td className="px-4 py-3">Donation to Environmental Charity</td>
-                  <td className="px-4 py-3 text-blue-600">July 20, 2024</td>
-                  <td className="px-4 py-3 font-bold text-yellow-600">-120</td>
-                </tr>
+                {(user.redeemedCredits || []).map((row, i) => (
+                  <tr key={i} className="hover:bg-yellow-50">
+                    <td className="px-4 py-3">{row.item}</td>
+                    <td className="px-4 py-3 text-blue-600">{row.date}</td>
+                    <td className="px-4 py-3 font-bold text-yellow-600">{row.credits > 0 ? '+' : ''}{row.credits}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -181,9 +212,28 @@ const MyCreditsSection = () => (
       </div>
     </div>
   );
+};
 
 const OverviewSection = () => {
   const { user } = useAuth();
+  // Level logic (reuse from ImpactDashboard)
+  const getLevelInfo = (co2, credits, returned) => {
+    if (co2 === 0 && credits === 0 && returned === 0) {
+      return { level: 1, label: 'Newbie' };
+    } else if (co2 < 50) {
+      return { level: 2, label: 'Eco-Starter' };
+    } else if (co2 < 100) {
+      return { level: 3, label: 'Eco-Advancer' };
+    } else if (co2 < 200) {
+      return { level: 4, label: 'Eco-Champion' };
+    } else {
+      return { level: 5, label: 'Eco-Legend' };
+    }
+  };
+  const co2 = user?.CO2_saved || 0;
+  const credits = user?.credits || 0;
+  const returned = user?.productsReturned || 0;
+  const { label } = getLevelInfo(co2, credits, returned);
   return (
     <div className="flex flex-col md:flex-row gap-10">
       {/* Left: Main content */}
@@ -191,7 +241,7 @@ const OverviewSection = () => {
         {/* User Card */}
         <div className="flex items-center gap-6 mb-8">
           <img
-            src={user?.avatar}
+            src={user?.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}
             alt={user?.name}
             className="w-24 h-24 rounded-full object-cover border-4 border-[#e3eae3]"
           />
@@ -205,23 +255,23 @@ const OverviewSection = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           <div className="bg-white rounded-xl p-5 flex flex-col items-center border border-[#e3eae3]">
             <div className="text-2xl font-extrabold text-gray-900 mb-1">
-              250 kg
+              {co2} kg
             </div>
             <div className="text-gray-600 text-sm">CO₂ Saved</div>
           </div>
           <div className="bg-white rounded-xl p-5 flex flex-col items-center border border-[#e3eae3]">
             <div className="text-2xl font-extrabold text-gray-900 mb-1">
-              150
+              {credits}
             </div>
             <div className="text-gray-600 text-sm">Credits Earned</div>
           </div>
           <div className="bg-white rounded-xl p-5 flex flex-col items-center border border-[#e3eae3]">
-            <div className="text-2xl font-extrabold text-gray-900 mb-1">30</div>
+            <div className="text-2xl font-extrabold text-gray-900 mb-1">{returned}</div>
             <div className="text-gray-600 text-sm">Items Returned</div>
           </div>
           <div className="bg-white rounded-xl p-5 flex flex-col items-center border border-[#e3eae3]">
             <div className="text-2xl font-extrabold text-gray-900 mb-1">
-              Eco-Champion
+              {label}
             </div>
             <div className="text-gray-600 text-sm">Eco-Level</div>
           </div>
@@ -246,7 +296,7 @@ const OverviewSection = () => {
             </div>
             <div className="flex items-center justify-center">
               <img
-                src="./src/assets/image2.png"
+                src="./assets/image2.png"
                 alt="Wallet"
                 className="rounded-xl w-28 h-28 object-cover bg-[#f9f6f2]"
               />
@@ -269,7 +319,7 @@ const OverviewSection = () => {
             </div>
             <div className="flex items-center justify-center">
               <img
-                src="./src/assets/globe.jpg"
+                src="./assets/globe.jpg"
                 alt="Globe"
                 className="rounded-xl w-28 h-25 object-cover bg-[#f9f6f2]"
               />
@@ -290,7 +340,7 @@ const OverviewSection = () => {
             </div>
             <div className="flex items-center justify-center">
               <img
-                src="./src/assets/image.png"
+                src="./assets/image.png"
                 alt="Plant"
                 className="rounded-xl w-28 h-26 object-cover bg-[#f9f6f2]"
               />
@@ -320,10 +370,37 @@ const OverviewSection = () => {
   );
 };
 
-const EWasteSection = () => (
+const EWasteSection = () => {
+  const { user, updateEWasteReturns } = useAuth();
+  const [item, setItem] = useState('');
+  const [date, setDate] = useState('');
+  const [status, setStatus] = useState('Recycled');
+  const [credits, setCredits] = useState('');
+
+  const handleAddEWaste = async (e) => {
+    e.preventDefault();
+    const newReturns = [
+      ...(user.eWasteReturns || []),
+      { item, date, status, credits: Number(credits) }
+    ];
+    await updateEWasteReturns({ eWasteReturns: newReturns });
+    setItem(''); setDate(''); setStatus('Recycled'); setCredits('');
+  };
+
+  return (
     <div>
       <h1 className="text-3xl font-bold mb-8">E-Waste Tracking</h1>
       <h2 className="text-lg font-semibold mb-4">Past E-Waste Returns</h2>
+      <form className="mb-4 flex flex-col gap-2" onSubmit={handleAddEWaste}>
+        <input placeholder="Item" value={item} onChange={e => setItem(e.target.value)} className="border rounded px-2 py-1" />
+        <input placeholder="Date" value={date} onChange={e => setDate(e.target.value)} className="border rounded px-2 py-1" />
+        <select value={status} onChange={e => setStatus(e.target.value)} className="border rounded px-2 py-1">
+          <option value="Recycled">Recycled</option>
+          <option value="In Transit">In Transit</option>
+        </select>
+        <input placeholder="Credits" value={credits} onChange={e => setCredits(e.target.value)} className="border rounded px-2 py-1" />
+        <button type="submit" className="bg-blue-500 text-white rounded px-3 py-1">Add</button>
+      </form>
       <div className="overflow-x-auto mb-8">
         <table className="min-w-full bg-white rounded-2xl border border-[#e3eae3] shadow">
           <thead>
@@ -335,30 +412,16 @@ const EWasteSection = () => (
             </tr>
           </thead>
           <tbody>
-            <tr className="border-t">
-              <td className="px-6 py-4">Old Laptop</td>
-              <td className="px-6 py-4 text-green-700 font-medium">2023-08-15</td>
-              <td className="px-6 py-4">
-                <span className="bg-green-100 text-green-800 px-4 py-1 rounded-full font-semibold">Recycled</span>
-              </td>
-              <td className="px-6 py-4 text-green-700 font-bold">+$15</td>
-            </tr>
-            <tr className="border-t">
-              <td className="px-6 py-4">Broken Smartphone</td>
-              <td className="px-6 py-4 text-green-700 font-medium">2023-05-22</td>
-              <td className="px-6 py-4">
-                <span className="bg-gray-100 text-gray-800 px-4 py-1 rounded-full font-semibold">In Transit</span>
-              </td>
-              <td className="px-6 py-4 text-green-700 font-bold">+$5</td>
-            </tr>
-            <tr className="border-t">
-              <td className="px-6 py-4">Tablet</td>
-              <td className="px-6 py-4 text-green-700 font-medium">2023-02-10</td>
-              <td className="px-6 py-4">
-                <span className="bg-green-100 text-green-800 px-4 py-1 rounded-full font-semibold">Recycled</span>
-              </td>
-              <td className="px-6 py-4 text-green-700 font-bold">+$10</td>
-            </tr>
+            {(user.eWasteReturns || []).map((row, i) => (
+              <tr key={i} className="border-t">
+                <td className="px-6 py-4">{row.item}</td>
+                <td className="px-6 py-4 text-green-700 font-medium">{row.date}</td>
+                <td className="px-6 py-4">
+                  <span className={`px-4 py-1 rounded-full font-semibold ${row.status === 'Recycled' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{row.status}</span>
+                </td>
+                <td className="px-6 py-4 text-green-700 font-bold">+${row.credits}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -373,15 +436,87 @@ const EWasteSection = () => (
       </div>
     </div>
   );
+};
 
-const NotificationsSection = () => (
-  <div>
-    <h1 className="text-3xl font-bold mb-8">Notifications</h1>
-    <div className="text-gray-700">
-      You have no new notifications. (Coming soon!)
+const ReturnsSection = () => {
+  const { token } = useAuth();
+  const [returns, setReturns] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    const fetchReturns = async () => {
+      try {
+        const res = await axios.get('/api/returns', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setReturns(res.data);
+      } catch {
+        setReturns([]);
+      }
+      setLoading(false);
+    };
+    fetchReturns();
+  }, [token]);
+
+  return (
+    <div>
+      <h1 className="text-3xl font-bold mb-8">My Returns</h1>
+      {loading ? <div>Loading...</div> : (
+        <div className="overflow-x-auto mb-8">
+          <table className="min-w-full bg-white rounded-2xl border border-[#e3eae3] shadow">
+            <thead>
+              <tr className="text-left text-gray-700 bg-[#f7faf7]">
+                <th className="px-6 py-3">Item</th>
+                <th className="px-6 py-3">Condition</th>
+                <th className="px-6 py-3">CO₂ Saved</th>
+                <th className="px-6 py-3">Credits</th>
+                <th className="px-6 py-3">Status</th>
+                <th className="px-6 py-3">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {returns.map((row, i) => (
+                <tr key={i} className="border-t">
+                  <td className="px-6 py-4">{row.item}</td>
+                  <td className="px-6 py-4">{row.condition}</td>
+                  <td className="px-6 py-4">{row.co2Saved} kg</td>
+                  <td className="px-6 py-4">{row.credits}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-4 py-1 rounded-full font-semibold ${row.status === 'Recycled' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{row.status}</span>
+                  </td>
+                  <td className="px-6 py-4">{new Date(row.createdAt).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
-  </div>
-);
+  );
+};
+
+const NotificationsSection = () => {
+  const { user } = useAuth();
+  return (
+    <div>
+      <h1 className="text-3xl font-bold mb-8">Notifications</h1>
+      <div className="text-gray-700">
+        {(user.notifications && user.notifications.length > 0) ? (
+          <ul className="space-y-2">
+            {user.notifications.map((n, i) => (
+              <li key={i} className={`p-3 rounded ${n.read ? 'bg-gray-100' : 'bg-blue-50'}`}>
+                <span className="font-medium">{n.message}</span>
+                <span className="ml-2 text-xs text-gray-500">{new Date(n.date).toLocaleString()}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div>No notifications yet.</div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const ProfileDashboard = () => {
   const { user } = useAuth();
@@ -395,7 +530,7 @@ const ProfileDashboard = () => {
       <aside className="w-72 bg-transparent flex flex-col items-start px-10 pt-16">
         <div className="flex flex-col items-start mb-10">
           <img
-            src={user?.avatar}
+            src={user?.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}
             alt={user?.name}
             className="w-14 h-14 rounded-full object-cover mb-2"
           />
@@ -428,6 +563,7 @@ const ProfileDashboard = () => {
           <Route path="/credits" element={<MyCreditsSection />} />
           <Route path="/ewaste" element={<EWasteSection />} />
           <Route path="/notifications" element={<NotificationsSection />} />
+          <Route path="/returns" element={<ReturnsSection />} />
         </Routes>
       </main>
       

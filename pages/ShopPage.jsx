@@ -6,7 +6,7 @@ import Footer from '../components/Footer';
 const allProducts = [
   {
     name: 'Recycled Cotton T-Shirt',
-    img: './src/assets/tshirt.jpg',
+    img: './assets/tshirt.jpg',
     condition: 'Excellent',
     confidence: '95%',
     co2Saved: 5,
@@ -16,7 +16,7 @@ const allProducts = [
   },
   {
     name: 'Vintage Leather Jacket',
-    img: './src/assets/jacket.jpg',
+    img: './assets/jacket.jpg',
     condition: 'Good',
     confidence: '88%',
     co2Saved: 10,
@@ -26,7 +26,7 @@ const allProducts = [
   },
   {
     name: 'Upcycled Denim Jeans',
-    img: './src/assets/jeans.jpg',
+    img: './assets/jeans.jpg',
     condition: 'Excellent',
     confidence: '92%',
     co2Saved: 7,
@@ -36,7 +36,7 @@ const allProducts = [
   },
   {
     name: 'Refurbished Smartwatch',
-    img: './src/assets/smartwatch.jpg',
+    img: './assets/smartwatch.jpg',
     condition: 'Good',
     confidence: '85%',
     co2Saved: 3,
@@ -46,7 +46,7 @@ const allProducts = [
   },
   {
     name: 'Pre-owned Designer Handbag',
-    img: './src/assets/handbag.jpg',
+    img: './assets/handbag.jpg',
     condition: 'Excellent',
     confidence: '90%',
     co2Saved: 4,
@@ -56,7 +56,7 @@ const allProducts = [
   },
   {
     name: 'Sustainable Running Shoes',
-    img: './src/assets/shoes.jpg',
+    img: './assets/shoes.jpg',
     condition: 'Good',
     confidence: '82%',
     co2Saved: 6,
@@ -66,7 +66,7 @@ const allProducts = [
   },
   {
     name: 'Second-hand Gaming Console',
-    img: './src/assets/console.jpg',
+    img: './assets/console.jpg',
     condition: 'Excellent',
     confidence: '94%',
     co2Saved: 12,
@@ -76,7 +76,7 @@ const allProducts = [
   },
   {
     name: 'Eco-friendly Yoga Mat',
-    img: './src/assets/yoga.jpg',
+    img: './assets/yoga.jpg',
     condition: 'Good',
     confidence: '80%',
     co2Saved: 2,
@@ -86,7 +86,7 @@ const allProducts = [
   },
   {
     name: 'Used Camera Lens',
-    img: './src/assets/lens.jpg',
+    img: './assets/lens.jpg',
     condition: 'Excellent',
     confidence: '91%',
     co2Saved: 3,
@@ -96,7 +96,7 @@ const allProducts = [
   },
   {
     name: 'Reclaimed Wood Furniture',
-    img: './src/assets/furniture.jpg',
+    img: './assets/furniture.jpg',
     condition: 'Good',
     confidence: '87%',
     co2Saved: 15,

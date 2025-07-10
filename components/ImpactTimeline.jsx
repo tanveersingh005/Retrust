@@ -3,21 +3,21 @@ import React from 'react';
 const defaultMilestones = [
   {
     icon: (
-      <img src="./src/assets/trophy.png" alt="First Product Returned" className="w-7 h-7 object-contain" />
+      <img src="./assets/trophy.png" alt="First Product Returned" className="w-7 h-7 object-contain" />
     ),
     label: 'First Product Returned',
     date: 'June 15, 2023',
   },
   {
     icon: (
-      <img src="./src/assets/milestone2.png" alt="Reached Level 2" className="w-7 h-7 object-contain" />
+      <img src="./assets/milestone2.png" alt="Reached Level 2" className="w-7 h-7 object-contain" />
     ),
     label: 'Reached Level 2',
     date: 'July 20, 2023',
   },
   {
     icon: (
-      <img src="./src/assets/milestone3.png" alt="Top 20% of Users" className="w-7 h-7 object-contain" />
+      <img src="./assets/milestone3.png" alt="Top 20% of Users" className="w-7 h-7 object-contain" />
     ),
     label: 'Top 20% of Users',
     date: 'August 5, 2023',

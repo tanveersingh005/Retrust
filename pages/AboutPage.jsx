@@ -27,31 +27,37 @@ const values = [
 
 const team = [
   {
-    img: './src/assets/team1.jpg',
+    img: './assets/team1.jpg',
     name: 'Tushar Jain',
     // role: 'CEO',
   },
   {
-    img: './src/assets/team2.jpg',
+    img: './assets/team2.jpg',
     name: 'Akshat Jangra',
     // role: 'Head of Sustainability',
   },
   {
-    img: './src/assets/team3.jpg',
+    img: './assets/team3.jpg',
     name: 'Tanveer Singh',
     // role: 'CTO',
   },
   {
-    img: './src/assets/team4.jpg',
+    img: './assets/team4.jpg',
     name: 'Bhoomika Bhatia',
     // role: 'CTO',
   },
 ];
 
 const impact = [
-  { label: 'Items Rehomed', value: '10,000+' },
-  { label: 'Waste Reduced', value: '50 Tons' },
-  { label: 'Community Members', value: '5,000+' },
+  { label: 'Items Rehomed', value: '10,000+', icon: (
+    <svg className="w-8 h-8 text-green-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M12 6v6l4 2" /></svg>
+  ) },
+  { label: 'Waste Reduced', value: '50 Tons', icon: (
+    <svg className="w-8 h-8 text-blue-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+  ) },
+  { label: 'Community Members', value: '5,000+', icon: (
+    <svg className="w-8 h-8 text-purple-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M8 12l2 2 4-4" /></svg>
+  ) },
 ];
 
 const AboutPage = () => (
@@ -85,10 +91,10 @@ const AboutPage = () => (
         <p className="text-gray-700 text-base mb-10 max-w-3xl">Our platform utilizes advanced technology to ensure a seamless and secure experience. We employ robust authentication and verification processes to build trust between buyers and sellers. Our smart matching algorithms connect users with products that align with their preferences and values.</p>
         <h2 className="text-xl font-bold mb-4">Our Impact</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {impact.map((stat, idx) => (
-            <div key={idx} className="bg-white rounded-xl p-6 flex flex-col items-center border border-[#e3eae3]">
-              <div className="text-2xl font-extrabold text-gray-900 mb-1">{stat.value}</div>
-              <div className="text-gray-600 text-sm">{stat.label}</div>
+          {impact.map((stat) => (
+            <div key={stat.label} className="bg-white rounded-2xl p-8 flex flex-col items-center">
+              <div className="mb-2 flex items-center">{stat.icon}<span className="text-3xl font-extrabold text-gray-900">{stat.value}</span></div>
+              <div className="text-gray-500 text-base font-medium">{stat.label}</div>
             </div>
           ))}
         </div>
