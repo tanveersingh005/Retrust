@@ -36,8 +36,8 @@ const PartnerMap = ({ partners = [], onMarkerDrag, markerPos = [51.505, -0.09] }
   };
 
   return (
-    <div className="mb-8">
-      <MapContainer center={markerPos} zoom={13} style={{ height: 250, width: '100%' }} className="rounded-xl overflow-hidden">
+    <div className="mb-8 z-0">
+      <MapContainer center={markerPos} zoom={13} style={{ height: 250, width: '100%' }} className="rounded-xl overflow-hidden z-0">
         <ChangeMapView center={markerPos} />
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

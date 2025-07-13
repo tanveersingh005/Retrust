@@ -117,6 +117,13 @@ const PartnerLocatorPage = () => {
     // eslint-disable-next-line
   }, []);
 
+  const HARDCODED_PARTNERS = [
+    { name: 'EcoTech Recyclers', type: 'Electronics, Small Appliances' },
+    { name: 'Renew Threads', type: 'Clothing, Textiles' },
+    { name: 'ReHome Refurbishers', type: 'Furniture, Large Items' },
+    { name: 'GreenLeaf Recycling', type: 'Bulk Pickup Available' },
+  ];
+
   return (
     <>
       <div className="bg-[#f7faf7] min-h-screen w-full pt-24 pb-12">
@@ -136,7 +143,14 @@ const PartnerLocatorPage = () => {
           <div className="mb-8">
             <h2 className="text-xl font-bold mb-4">Local Partners</h2>
             {loading && <div className="text-blue-600 font-semibold mb-4">Searching for centers...</div>}
-            {partners.length === 0 && !loading && <div className="text-gray-500 mb-4">No partners found. Try another location or search term.</div>}
+            {partners.length === 0 && !loading && (
+              <>
+                <div className="text-gray-500 mb-4">No partners found nearby. Here are some trusted centers you can contact:</div>
+                {HARDCODED_PARTNERS.map((partner, idx) => (
+                  <PartnerCard key={idx} partner={partner} onSchedule={handleSchedule} />
+                ))}
+              </>
+            )}
             {partners.map((partner, idx) => (
               <PartnerCard key={idx} partner={partner} onSchedule={handleSchedule} />
             ))}

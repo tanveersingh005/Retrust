@@ -103,34 +103,10 @@ const EditProfileSection = () => {
 };
 
 const MyCreditsSection = () => {
-  const { user, updateCreditHistory } = useAuth();
-  const [item, setItem] = useState('');
-  const [date, setDate] = useState('');
-  const [co2Impact, setCo2Impact] = useState('');
-  const [credits, setCredits] = useState('');
-  const [redeemItem, setRedeemItem] = useState('');
-  const [redeemDate, setRedeemDate] = useState('');
-  const [redeemCredits, setRedeemCredits] = useState('');
-
-  const handleAddHistory = async (e) => {
-    e.preventDefault();
-    const newHistory = [
-      ...(user.creditHistory || []),
-      { item, date, co2Impact, credits: Number(credits) }
-    ];
-    await updateCreditHistory({ creditHistory: newHistory });
-    setItem(''); setDate(''); setCo2Impact(''); setCredits('');
-  };
-
-  const handleAddRedeem = async (e) => {
-    e.preventDefault();
-    const newRedeemed = [
-      ...(user.redeemedCredits || []),
-      { item: redeemItem, date: redeemDate, credits: Number(redeemCredits) }
-    ];
-    await updateCreditHistory({ redeemedCredits: newRedeemed });
-    setRedeemItem(''); setRedeemDate(''); setRedeemCredits('');
-  };
+  const { user } = useAuth();
+  // Total Credits Card
+  // Only use user.credits for display
+  // const credits = user?.credits || 0;
 
   return (
     <div>
@@ -152,13 +128,6 @@ const MyCreditsSection = () => {
         {/* Credit History */}
         <div>
           <h2 className="text-xl font-bold mb-2">Credit History</h2>
-          <form className="mb-4 flex flex-col gap-2" onSubmit={handleAddHistory}>
-            <input placeholder="Item" value={item} onChange={e => setItem(e.target.value)} className="border rounded px-2 py-1" />
-            <input placeholder="Date" value={date} onChange={e => setDate(e.target.value)} className="border rounded px-2 py-1" />
-            <input placeholder="CO₂ Impact" value={co2Impact} onChange={e => setCo2Impact(e.target.value)} className="border rounded px-2 py-1" />
-            <input placeholder="Credits" value={credits} onChange={e => setCredits(e.target.value)} className="border rounded px-2 py-1" />
-            <button type="submit" className="bg-green-500 text-white rounded px-3 py-1">Add</button>
-          </form>
           <div className="overflow-x-auto rounded-2xl shadow bg-white border border-gray-100">
             <table className="min-w-full">
               <thead>
@@ -185,12 +154,6 @@ const MyCreditsSection = () => {
         {/* Redeemed Credits */}
         <div>
           <h2 className="text-xl font-bold mb-2">Redeemed Credits</h2>
-          <form className="mb-4 flex flex-col gap-2" onSubmit={handleAddRedeem}>
-            <input placeholder="Item" value={redeemItem} onChange={e => setRedeemItem(e.target.value)} className="border rounded px-2 py-1" />
-            <input placeholder="Date" value={redeemDate} onChange={e => setRedeemDate(e.target.value)} className="border rounded px-2 py-1" />
-            <input placeholder="Credits" value={redeemCredits} onChange={e => setRedeemCredits(e.target.value)} className="border rounded px-2 py-1" />
-            <button type="submit" className="bg-yellow-500 text-white rounded px-3 py-1">Add</button>
-          </form>
           <div className="overflow-x-auto rounded-2xl shadow bg-white border border-gray-100">
             <table className="min-w-full">
               <thead>
