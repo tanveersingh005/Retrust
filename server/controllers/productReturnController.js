@@ -110,4 +110,15 @@ export const getUserReturns = async (req, res) => {
   } catch {
     res.status(500).json({ message: 'Server error' });
   }
+};
+
+export const getReturnById = async (req, res) => {
+  try {
+    const productReturn = await ProductReturn.findById(req.params.id);
+    if (!productReturn) return res.status(404).json({ message: 'Return not found' });
+    // Optionally, check if req.user.id === productReturn.user.toString() for security
+    res.json(productReturn);
+  } catch {
+    res.status(500).json({ message: 'Server error' });
+  }
 }; 
