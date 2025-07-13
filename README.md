@@ -71,7 +71,7 @@ npm run dev
 - `/public/assets` — Images and static assets
 
 ## Credits
-- Built with ❤️ by [Your Name]
+- Built with ❤️ by Tanveer Singh
 - Inspired by sustainable commerce and circular economy principles
 
 ---
