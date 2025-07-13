@@ -5,7 +5,7 @@ import auth from '../middlewares/authMiddleware.js';
 const router = express.Router();
 
 
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
     res.send('ReTrust+ API is running!');
   });
 router.post('/register', register);
