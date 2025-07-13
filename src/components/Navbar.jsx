@@ -131,6 +131,17 @@ const Navbar = ({ onSignInClick }) => {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 shadow-lg">
           <div className="px-4 py-2 space-y-1">
+            {/* User Profile - Mobile */}
+            {user && (
+              <div className="flex flex-col items-center py-4 border-b border-gray-200 mb-2">
+                <img
+                  src={user.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}
+                  alt={user.name}
+                  className="w-16 h-16 rounded-full object-cover border-2 border-green-200 shadow mb-2"
+                />
+                <span className="font-semibold text-gray-900 text-lg">{user.name}</span>
+              </div>
+            )}
             {/* Navigation Links - Mobile */}
             {navLinks.map((link) => (
               <Link

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from '../context/useAuth';
 import { UserIcon, ArrowPathIcon, BellIcon } from "@heroicons/react/24/outline";
 import { HiOutlineHome } from "react-icons/hi2";
@@ -6,6 +6,9 @@ import { TbRecycle } from "react-icons/tb";
 import { useNavigate, useLocation, Routes, Route } from "react-router-dom";
 import Footer from "../components/Footer";
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import EwasteDetailPage from '../pages/EwasteDetailPage'; // (to be created)
 
 const sidebarItems = [
   {
@@ -30,7 +33,7 @@ const sidebarItems = [
   },
   {
     name: "Notifications",
-    icon: <BellIcon className="w-5 h-5 mr-2" />,
+    icon: <BellIcon className="w-5 h-5 mr-2" />, // We'll add badge logic below
     path: "/profile/notifications",
   },
 ];
@@ -371,69 +374,157 @@ const OverviewSection = () => {
 };
 
 const EWasteSection = () => {
-  const { user, updateEWasteReturns } = useAuth();
-  const [item, setItem] = useState('');
-  const [date, setDate] = useState('');
-  const [status, setStatus] = useState('Recycled');
-  const [credits, setCredits] = useState('');
+  const { token } = useAuth();
+  const [returns, setReturns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [search, setSearch] = useState('');
+  const [sortOrder, setSortOrder] = useState('newest');
+  const navigate = useNavigate();
 
-  const handleAddEWaste = async (e) => {
-    e.preventDefault();
-    const newReturns = [
-      ...(user.eWasteReturns || []),
-      { item, date, status, credits: Number(credits) }
-    ];
-    await updateEWasteReturns({ eWasteReturns: newReturns });
-    setItem(''); setDate(''); setStatus('Recycled'); setCredits('');
+  useEffect(() => {
+    const fetchReturns = async () => {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/returns`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setReturns(res.data);
+      } catch {
+        setReturns([]);
+      }
+      setLoading(false);
+    };
+    fetchReturns();
+  }, [token]);
+
+  const handleStatusUpdate = async (id, newStatus) => {
+    try {
+      await axios.put(`${import.meta.env.VITE_API_URL}/returns/${id}/status`, { status: newStatus }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setReturns(returns => returns.map(r => r._id === id ? { ...r, status: newStatus } : r));
+      toast.success(`Status updated to '${newStatus}'`);
+    } catch {
+      toast.error('Failed to update status.');
+    }
   };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this return?')) return;
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/returns/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setReturns(returns => returns.filter(r => r._id !== id));
+      toast.success('Return deleted successfully.');
+    } catch {
+      toast.error('Failed to delete return.');
+    }
+  };
+
+  const filtered = returns.filter(r =>
+    (statusFilter === 'All' || r.status === statusFilter) &&
+    r.item.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // Sorting logic
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortOrder === 'newest') {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    } else {
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    }
+  });
 
   return (
     <div>
+      <ToastContainer position="top-center" autoClose={2500} theme="colored" />
       <h1 className="text-3xl font-bold mb-8">E-Waste Tracking</h1>
-      <h2 className="text-lg font-semibold mb-4">Past E-Waste Returns</h2>
-      <form className="mb-4 flex flex-col gap-2" onSubmit={handleAddEWaste}>
-        <input placeholder="Item" value={item} onChange={e => setItem(e.target.value)} className="border rounded px-2 py-1" />
-        <input placeholder="Date" value={date} onChange={e => setDate(e.target.value)} className="border rounded px-2 py-1" />
-        <select value={status} onChange={e => setStatus(e.target.value)} className="border rounded px-2 py-1">
-          <option value="Recycled">Recycled</option>
-          <option value="In Transit">In Transit</option>
+      <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
+        <div className="flex gap-2">
+          {['All', 'In Transit', 'Recycled'].map(s => (
+            <button
+              key={s}
+              className={`px-4 py-2 rounded-full font-semibold border transition-colors ${statusFilter === s ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-blue-50'}`}
+              onClick={() => setStatusFilter(s)}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+        <input
+          type="text"
+          placeholder="Search by item name..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-100 text-base w-full md:w-64"
+        />
+        <select
+          value={sortOrder}
+          onChange={e => setSortOrder(e.target.value)}
+          className="px-4 py-2 rounded-full border border-gray-300 text-base bg-white"
+        >
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
         </select>
-        <input placeholder="Credits" value={credits} onChange={e => setCredits(e.target.value)} className="border rounded px-2 py-1" />
-        <button type="submit" className="bg-blue-500 text-white rounded px-3 py-1">Add</button>
-      </form>
-      <div className="overflow-x-auto mb-8">
-        <table className="min-w-full bg-white rounded-2xl border border-[#e3eae3] shadow">
-          <thead>
-            <tr className="text-left text-gray-700 bg-[#f7faf7]">
-              <th className="px-6 py-3">Item</th>
-              <th className="px-6 py-3">Date</th>
-              <th className="px-6 py-3">Status</th>
-              <th className="px-6 py-3">Credits Earned</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(user.eWasteReturns || []).map((row, i) => (
-              <tr key={i} className="border-t">
-                <td className="px-6 py-4">{row.item}</td>
-                <td className="px-6 py-4 text-green-700 font-medium">{row.date}</td>
-                <td className="px-6 py-4">
-                  <span className={`px-4 py-1 rounded-full font-semibold ${row.status === 'Recycled' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{row.status}</span>
-                </td>
-                <td className="px-6 py-4 text-green-700 font-bold">+${row.credits}</td>
+      </div>
+      {loading ? <div>Loading...</div> : (
+        <div className="overflow-x-auto mb-8">
+          <table className="min-w-full bg-white rounded-2xl border border-[#e3eae3] shadow">
+            <thead>
+              <tr className="text-left text-gray-700 bg-[#f7faf7]">
+                <th className="px-6 py-3">Image</th>
+                <th className="px-6 py-3">Item</th>
+                <th className="px-6 py-3">Date</th>
+                <th className="px-6 py-3">Status</th>
+                <th className="px-6 py-3">Credits Earned</th>
+                <th className="px-6 py-3">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <button className="mt-2 mb-8 px-6 py-3 rounded-full bg-green-500 text-white font-bold shadow hover:bg-green-600 transition-colors">
-        Initiate New E-Waste Return
-      </button>
-      <div>
-        <h3 className="font-bold text-lg mb-2">Responsible E-Waste Disposal Tips</h3>
-        <p className="text-gray-700 max-w-2xl">
-          Proper e-waste disposal is crucial for environmental sustainability. Always recycle electronics through certified programs to prevent hazardous materials from polluting the environment. Consider donating or reselling functional devices to extend their lifespan. For non-functional items, explore manufacturer take-back programs or local recycling events. Remember to erase personal data from devices before disposal to protect your privacy.
-        </p>
-      </div>
+            </thead>
+            <tbody>
+              {sorted.map((row, i) => (
+                <tr key={i} className="border-t">
+                  <td className="px-6 py-4">
+                    <img
+                      src={row.images && row.images.length > 0 ? row.images[0] : 'https://cdn-icons-png.flaticon.com/512/1829/1829586.png'}
+                      alt={row.item}
+                      className="w-14 h-14 object-cover rounded-xl border shadow-sm bg-gray-50"
+                    />
+                  </td>
+                  <td className="px-6 py-4">{row.item}</td>
+                  <td className="px-6 py-4 text-green-700 font-medium">{new Date(row.createdAt).toLocaleDateString()}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-4 py-1 rounded-full font-semibold text-xs ${row.status === 'Recycled' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{row.status}</span>
+                  </td>
+                  <td className="px-6 py-4 text-green-700 font-bold">{row.credits}</td>
+                  <td className="px-6 py-4 flex gap-2 items-center">
+                    <select
+                      value={row.status}
+                      onChange={e => handleStatusUpdate(row._id, e.target.value)}
+                      className="px-2 py-1 rounded border border-gray-300 text-sm"
+                    >
+                      <option value="In Transit">In Transit</option>
+                      <option value="Recycled">Recycled</option>
+                    </select>
+                    <button
+                      className="px-3 py-1 rounded bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 transition-colors text-sm"
+                      onClick={() => navigate(`/ewaste/${row._id}`)}
+                    >
+                      View Details
+                    </button>
+                    <button
+                      className="px-3 py-1 rounded bg-red-100 text-red-700 font-semibold hover:bg-red-200 transition-colors text-sm"
+                      onClick={() => handleDelete(row._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
@@ -496,15 +587,25 @@ const ReturnsSection = () => {
 };
 
 const NotificationsSection = () => {
-  const { user } = useAuth();
+  const { user, updateProfile } = useAuth();
+  useEffect(() => {
+    // Mark all notifications as read when viewing
+    if (user?.notifications?.some(n => !n.read)) {
+      const updated = user.notifications.map(n => ({ ...n, read: true }));
+      updateProfile({ notifications: updated });
+    }
+    // eslint-disable-next-line
+  }, []);
+  const sorted = [...(user.notifications || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
   return (
     <div>
       <h1 className="text-3xl font-bold mb-8">Notifications</h1>
       <div className="text-gray-700">
-        {(user.notifications && user.notifications.length > 0) ? (
+        {sorted.length > 0 ? (
           <ul className="space-y-2">
-            {user.notifications.map((n, i) => (
-              <li key={i} className={`p-3 rounded ${n.read ? 'bg-gray-100' : 'bg-blue-50'}`}>
+            {sorted.map((n, i) => (
+              <li key={i} className={`p-3 rounded flex items-center gap-3 ${n.read ? 'bg-gray-100' : 'bg-blue-50'}`}>
+                <BellIcon className="w-5 h-5 text-blue-400" />
                 <span className="font-medium">{n.message}</span>
                 <span className="ml-2 text-xs text-gray-500">{new Date(n.date).toLocaleString()}</span>
               </li>
@@ -522,7 +623,7 @@ const ProfileDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
+  const unreadCount = user?.notifications?.filter(n => !n.read).length || 0;
   return (
     <>
     <div className="bg-[#f7faf7] min-h-screen flex pt-8 pb-8">
@@ -551,6 +652,9 @@ const ProfileDashboard = () => {
             >
               {item.icon}
               {item.name}
+              {item.name === 'Notifications' && unreadCount > 0 && (
+                <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-blue-500 rounded-full">{unreadCount}</span>
+              )}
             </button>
           ))}
         </nav>
@@ -562,6 +666,7 @@ const ProfileDashboard = () => {
           <Route path="/edit" element={<EditProfileSection />} />
           <Route path="/credits" element={<MyCreditsSection />} />
           <Route path="/ewaste" element={<EWasteSection />} />
+          <Route path="/ewaste/:id" element={<EwasteDetailPage />} />
           <Route path="/notifications" element={<NotificationsSection />} />
           <Route path="/returns" element={<ReturnsSection />} />
         </Routes>

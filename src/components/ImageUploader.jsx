@@ -1,24 +1,38 @@
 import React, { useRef } from 'react';
+import PacmanLoader from 'react-spinners/PacmanLoader';
+import axios from 'axios';
 
-const ImageUploader = ({ images, setImages }) => {
+async function uploadToCloudinary(file) {
+  const data = new FormData();
+  data.append('file', file);
+  data.append('upload_preset', 'Retrust_Images'); // e.g., 'retrust_unsigned'
+  const res = await axios.post(
+    'https://api.cloudinary.com/v1_1/dez3vx8pi/image/upload',
+    data
+  );
+  return res.data.secure_url; // This is the image URL to save in your DB
+}
+
+const ImageUploader = ({ images, setImages, loading, setLoading }) => {
   const fileInput = useRef();
 
-  const handleFiles = files => {
+  const handleFiles = async (files) => {
+    setLoading(true);
     const fileArr = Array.from(files);
-    const previews = fileArr.map(file => ({
-      file,
-      url: URL.createObjectURL(file),
-    }));
-    setImages([...(images || []), ...previews]);
+    // Upload all files to Cloudinary
+    const uploadPromises = fileArr.map(file => uploadToCloudinary(file));
+    const urls = await Promise.all(uploadPromises);
+    setImages([...(images || []), ...urls.map(url => ({ url }))]);
+    setLoading(false);
   };
 
-  const handleDrop = e => {
+  const handleDrop = async (e) => {
     e.preventDefault();
-    handleFiles(e.dataTransfer.files);
+    await handleFiles(e.dataTransfer.files);
   };
 
-  const handleChange = e => {
-    handleFiles(e.target.files);
+  const handleChange = async (e) => {
+    await handleFiles(e.target.files);
   };
 
   const removeImage = idx => {
@@ -26,12 +40,13 @@ const ImageUploader = ({ images, setImages }) => {
   };
 
   return (
-    <div>
+    <div className="relative">
       <div
         className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors mb-4"
         onClick={() => fileInput.current.click()}
         onDrop={handleDrop}
         onDragOver={e => e.preventDefault()}
+        style={{ pointerEvents: loading ? 'none' : 'auto', opacity: loading ? 0.5 : 1 }}
       >
         <input
           type="file"

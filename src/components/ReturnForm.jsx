@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ImageUploader from './ImageUploader';
+import PacmanLoader from 'react-spinners/PacmanLoader';
 
 const productTypes = ['Select Type', 'Clothing', 'Electronics', 'Accessories', 'Furniture'];
 const categories = ['Select Category', 'Jacket', 'T-Shirt', 'Shoes', 'Watch', 'Bag', 'Other'];
@@ -14,6 +15,7 @@ const ReturnForm = ({ onSubmit }) => {
     description: '',
     images: [],
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -61,9 +63,15 @@ const ReturnForm = ({ onSubmit }) => {
       </div>
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-2">Upload Product Images</label>
-        <ImageUploader images={form.images} setImages={handleImages} />
+        <ImageUploader images={form.images} setImages={handleImages} loading={loading} setLoading={setLoading} />
       </div>
       <button type="submit" className="w-full py-3 rounded-lg bg-primary text-gray-700 font-medium text-lg shadow hover:bg-primary-dark transition-colors duration-200">Submit</button>
+      {loading && (
+        <div className="flex flex-col items-center mt-4">
+          <PacmanLoader color="#15803d" size={32} speedMultiplier={4} />
+          <span className="mt-2 text-green-800 font-semibold text-lg animate-pulse">Uploading</span>
+        </div>
+      )}
     </form>
   );
 };

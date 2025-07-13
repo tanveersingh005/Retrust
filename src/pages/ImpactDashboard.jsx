@@ -31,23 +31,46 @@ const getRank = (credits) => {
 
 const ImpactDashboard = () => {
   const { user } = useAuth();
-  const co2 = user?.CO2_saved || 0;
-  const credits = user?.credits || 0;
-  const returned = user?.productsReturned || 0;
-  const rank = getRank(credits);
-  const { level, label, progress, nextLevel } = getLevelInfo(co2, credits, returned);
 
-  // Dynamic milestones for timeline
-  const milestones = [];
-  if (returned === 0) {
-    milestones.push({
-      icon: <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Newbie" className="w-7 h-7 object-contain" />, label: 'Welcome! Start your eco journey.', date: ''
-    });
-  } else {
-    if (returned >= 1) milestones.push({ icon: <img src="./assets/trophy.png" alt="First Product Returned" className="w-7 h-7 object-contain" />, label: 'First Product Returned', date: '' });
-    if (returned >= 5) milestones.push({ icon: <img src="./assets/milestone2.png" alt="Reached Level 2" className="w-7 h-7 object-contain" />, label: 'Reached Level 2', date: '' });
-    if (returned >= 10) milestones.push({ icon: <img src="./assets/milestone3.png" alt="Top 20% of Users" className="w-7 h-7 object-contain" />, label: 'Top 20% of Users', date: '' });
-  }
+  // Demo data for guests
+  const demo = {
+    co2: 12450,
+    credits: 5800,
+    returned: 3200,
+    rank: 'Top 10%',
+    level: 4,
+    label: 'Eco-Champion',
+    progress: 75,
+    nextLevel: 5,
+    milestones: [
+      { icon: <img src="./assets/trophy.png" alt="First Product Returned" className="w-7 h-7 object-contain" />, label: 'First Product Returned', date: 'June 15, 2023' },
+      { icon: <img src="./assets/milestone2.png" alt="Reached Level 2" className="w-7 h-7 object-contain" />, label: 'Reached Level 2', date: 'July 20, 2023' },
+      { icon: <img src="./assets/milestone3.png" alt="Top 20% of Users" className="w-7 h-7 object-contain" />, label: 'Top 20% of Users', date: 'August 5, 2023' },
+    ],
+  };
+
+  const co2 = user ? (user.CO2_saved || 0) : demo.co2;
+  const credits = user ? (user.credits || 0) : demo.credits;
+  const returned = user ? (user.productsReturned || 0) : demo.returned;
+  const rank = user ? getRank(credits) : demo.rank;
+  const { level, label, progress, nextLevel } = user
+    ? getLevelInfo(co2, credits, returned)
+    : { level: demo.level, label: demo.label, progress: demo.progress, nextLevel: demo.nextLevel };
+  const milestones = user
+    ? (() => {
+        const arr = [];
+        if (returned === 0) {
+          arr.push({
+            icon: <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Newbie" className="w-7 h-7 object-contain" />, label: 'Welcome! Start your eco journey.', date: ''
+          });
+        } else {
+          if (returned >= 1) arr.push({ icon: <img src="./assets/trophy.png" alt="First Product Returned" className="w-7 h-7 object-contain" />, label: 'First Product Returned', date: '' });
+          if (returned >= 5) arr.push({ icon: <img src="./assets/milestone2.png" alt="Reached Level 2" className="w-7 h-7 object-contain" />, label: 'Reached Level 2', date: '' });
+          if (returned >= 10) arr.push({ icon: <img src="./assets/milestone3.png" alt="Top 20% of Users" className="w-7 h-7 object-contain" />, label: 'Top 20% of Users', date: '' });
+        }
+        return arr;
+      })()
+    : demo.milestones;
 
   return (
     <>
