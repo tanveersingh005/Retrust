@@ -13,12 +13,13 @@ import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import SignInSignUpModal from "./components/SignInSignUpModal";
 import { useAuth } from './context/useAuth';
+import LoadingSpinner from './components/LoadingSpinner';
 
 const AppContent = () => {
   const [showAuth, setShowAuth] = useState(false);
   const { loading } = useAuth();
 
-  if (loading) return null; // or a spinner
+  if (loading) return <LoadingSpinner />;
 
   return (
     <Router>
