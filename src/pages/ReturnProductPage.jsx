@@ -19,7 +19,7 @@ const ReturnProductPage = () => {
   const [returnId, setReturnId] = useState(null);
   const [redeemed, setRedeemed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const { token, setUser } = useAuth();
+  const { token, setUser, fetchUser } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (data) => {
@@ -44,6 +44,7 @@ const ReturnProductPage = () => {
       });
       setReturnId(res.data._id);
       setSubmitted(true);
+      await fetchUser(token); // Refresh user data/notifications
     } catch {
       alert('Failed to submit return.');
     }

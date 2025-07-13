@@ -9,6 +9,7 @@ import MyCreditsPage from "./pages/MyCreditsPage";
 import ProfileDashboard from "./pages/ProfileDashboard";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import EwasteDetailPage from "./pages/EwasteDetailPage";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import SignInSignUpModal from "./components/SignInSignUpModal";
@@ -38,6 +39,7 @@ const AppContent = () => {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/credits" element={<MyCreditsPage />} />
         <Route path="/profile/*" element={<ProfileDashboard />} />
+        <Route path="/ewaste/:id" element={<EwasteDetailPage />} />
       </Routes>
     </Router>
   );

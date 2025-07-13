@@ -374,7 +374,7 @@ const OverviewSection = () => {
 };
 
 const EWasteSection = () => {
-  const { token } = useAuth();
+  const { token, fetchUser, user } = useAuth();
   const [returns, setReturns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('All');
@@ -403,6 +403,7 @@ const EWasteSection = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setReturns(returns => returns.map(r => r._id === id ? { ...r, status: newStatus } : r));
+      await fetchUser(token); // Refresh user data/notifications
       toast.success(`Status updated to '${newStatus}'`);
     } catch {
       toast.error('Failed to update status.');
@@ -419,6 +420,18 @@ const EWasteSection = () => {
       toast.success('Return deleted successfully.');
     } catch {
       toast.error('Failed to delete return.');
+    }
+  };
+
+  const handleRedeem = async (id) => {
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/returns/${id}/redeem`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      await fetchUser(token); // Update credits and notifications
+      toast.success('Credits redeemed!');
+    } catch {
+      toast.error('Failed to redeem credits.');
     }
   };
 
@@ -518,6 +531,14 @@ const EWasteSection = () => {
                     >
                       Delete
                     </button>
+                    {row.status === 'Recycled' && !user.creditHistory?.some(h => h.item === row.item && h.credits === row.credits) && (
+                      <button
+                        className="px-3 py-1 rounded bg-green-100 text-green-700 font-semibold hover:bg-green-200 transition-colors text-sm"
+                        onClick={() => handleRedeem(row._id)}
+                      >
+                        Redeem Credits
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

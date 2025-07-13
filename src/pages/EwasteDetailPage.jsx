@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/useAuth';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const EwasteDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { token, fetchUser, user } = useAuth();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -23,6 +26,18 @@ const EwasteDetailPage = () => {
 
   if (loading) return <div className="p-8 text-center">Loading...</div>;
   if (!product) return <div className="p-8 text-center text-red-600">Product not found.</div>;
+
+  const handleRedeem = async () => {
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/returns/${id}/redeem`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      await fetchUser(token);
+      toast.success('Credits redeemed!');
+    } catch {
+      toast.error('Failed to redeem credits.');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#f7faf7] flex flex-col items-center pt-16 pb-8">
@@ -59,6 +74,20 @@ const EwasteDetailPage = () => {
         <div className="mb-2"><span className="font-semibold">Condition:</span> {product.condition || 'N/A'}</div>
         <div className="mb-2"><span className="font-semibold">CO₂ Saved:</span> {product.co2Saved || 'N/A'} kg</div>
         {/* Add more fields as needed */}
+        {product.status === 'Recycled' && !user.creditHistory?.some(h => h.item === product.item && h.credits === product.credits) && (
+          <button
+            className="mt-6 px-6 py-3 rounded-lg bg-green-600 text-white font-bold shadow hover:bg-green-700 transition-colors text-lg"
+            onClick={handleRedeem}
+          >
+            Redeem Credits
+          </button>
+        )}
+        <button
+          className="mt-4 px-6 py-3 rounded-lg bg-blue-600 text-white font-bold shadow hover:bg-blue-700 transition-colors text-lg"
+          onClick={() => navigate('/partner-locator')}
+        >
+          Explore Nearby Centers
+        </button>
       </div>
     </div>
   );

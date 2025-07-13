@@ -13,6 +13,7 @@ import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import SignInSignUpModal from "./components/SignInSignUpModal";
 import { useAuth } from './context/useAuth';
+import EwasteDetailPage from "./pages/EwasteDetailPage";
 
 const AppContent = () => {
   const [showAuth, setShowAuth] = useState(false);
@@ -37,6 +38,7 @@ const AppContent = () => {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/credits" element={<MyCreditsPage />} />
         <Route path="/profile/*" element={<ProfileDashboard />} />
+        <Route path="/ewaste/:id" element={<EwasteDetailPage />} />
       </Routes>
     </Router>
   );
