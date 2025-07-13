@@ -2,13 +2,15 @@ import React from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/useAuth';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const ProductCard = ({ product, onTagClick }) => {
   const { token, user } = useAuth();
   const handleRedeem = async () => {
     if (!user || !token) return alert('Please sign in to redeem credits.');
     if (user.credits < product.price) return alert('Not enough credits!');
     try {
-      await axios.post('/api/auth/redeem-credits', {
+      await axios.post(`${API_URL}/auth/redeem-credits`, {
         item: product.name,
         credits: product.price
       }, {

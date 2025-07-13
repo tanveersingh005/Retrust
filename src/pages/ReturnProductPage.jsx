@@ -7,6 +7,8 @@ import ImpactSection from '../components/ImpactSection';
 import axios from 'axios';
 import { useAuth } from '../context/useAuth';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const ReturnProductPage = () => {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState(null);
@@ -20,7 +22,7 @@ const ReturnProductPage = () => {
     // Prepare images as URLs or base64 strings
     const images = (data.images || []).map(img => img.url || img);
     try {
-      const res = await axios.post('/api/returns', {
+      const res = await axios.post(`${API_URL}/returns`, {
         item: data.category,
         condition: data.condition,
         images,
@@ -53,7 +55,7 @@ const ReturnProductPage = () => {
   const handleRedeem = async () => {
     if (!returnId) return;
     try {
-      await axios.post(`/api/returns/${returnId}/redeem`, {}, {
+      await axios.post(`${API_URL}/returns/${returnId}/redeem`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRedeemed(true);
