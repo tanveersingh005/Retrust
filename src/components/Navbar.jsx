@@ -1,6 +1,8 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import { useState } from "react";
+import { useCart } from '../context/CartContext';
+import { FaShoppingCart } from 'react-icons/fa';
 
 const navLinks = [
   { name: "Shop", path: "/shop" },
@@ -15,6 +17,8 @@ const Navbar = ({ onSignInClick }) => {
   const location = useLocation();
   const { user, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { cart } = useCart();
+  const navigate = useNavigate();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -47,6 +51,18 @@ const Navbar = ({ onSignInClick }) => {
               )}
             </Link>
           ))}
+          {/* Cart Icon */}
+          <button
+            className="relative ml-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
+            onClick={() => navigate('/cart')}
+          >
+            <FaShoppingCart className="w-6 h-6 text-gray-700" />
+            {cart.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5">
+                {cart.reduce((sum, item) => sum + item.qty, 0)}
+              </span>
+            )}
+          </button>
         </div>
         {/* User Profile / Sign In - Desktop */}
         {!user ? (
@@ -87,6 +103,12 @@ const Navbar = ({ onSignInClick }) => {
                 className="block px-4 py-2 hover:bg-gray-100 text-gray-700"
               >
                 Edit Profile
+              </Link>
+              <Link
+                to="/profile/ewaste"
+                className="block px-4 py-2 hover:bg-gray-100 text-gray-700"
+              >
+                E-Tracking
               </Link>
               <button
                 className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
@@ -196,6 +218,13 @@ const Navbar = ({ onSignInClick }) => {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Edit Profile
+                </Link>
+                <Link
+                  to="/profile/ewaste"
+                  className="block px-3 py-2 text-gray-700 hover:text-green-700 hover:bg-gray-50 transition-colors duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  E-Tracking
                 </Link>
                 <button
                   className="w-full text-left px-3 py-2 text-gray-700 hover:text-green-700 hover:bg-gray-50 transition-colors duration-200"

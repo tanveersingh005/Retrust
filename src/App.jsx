@@ -10,11 +10,13 @@ import ProfileDashboard from "./pages/ProfileDashboard";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import EwasteDetailPage from "./pages/EwasteDetailPage";
+import CartPage from "./pages/CartPage";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import SignInSignUpModal from "./components/SignInSignUpModal";
 import { useAuth } from './context/useAuth';
 import LoadingSpinner from './components/LoadingSpinner';
+import { CartProvider } from "./context/CartContext";
 
 const AppContent = () => {
   const [showAuth, setShowAuth] = useState(false);
@@ -32,6 +34,7 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/shop" element={<ShopPage />} />
+        <Route path="/cart" element={<CartPage />} />
         <Route path="/return" element={<ReturnProductPage />} />
         <Route path="/impact" element={<ImpactDashboard />} />
         <Route path="/partners" element={<PartnerLocatorPage />} />
@@ -47,7 +50,9 @@ const AppContent = () => {
 
 const App = () => (
   <AuthProvider>
-    <AppContent />
+    <CartProvider>
+      <AppContent />
+    </CartProvider>
   </AuthProvider>
 );
 

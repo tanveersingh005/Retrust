@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
 import returnsRoutes from './routes/returns.js';
+import ordersRoutes from './routes/orders.js';
 
 // Load environment variables
 dotenv.config();
@@ -21,6 +22,7 @@ connectDB();
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/returns', returnsRoutes);
+app.use('/api/orders', ordersRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`)); 

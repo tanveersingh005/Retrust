@@ -156,53 +156,55 @@ const EwasteDetailPage = () => {
       >
         &larr; Back to E-Waste Tracking
       </button>
-      <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-2xl w-full border border-[#e0e7ef]">
-        <h1 className="text-2xl font-bold mb-6">Product Return Details</h1>
-        <div className="flex flex-wrap gap-4 mb-6">
-          {(product.images && product.images.length > 0) ? (
-            product.images.map((img, idx) => (
+      <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-2xl w-full border border-[#e0e7ef] flex flex-col items-center">
+        <h1 className="text-2xl font-bold mb-8 text-center w-full">Product Return Details</h1>
+        <div className="flex flex-col md:flex-row items-center gap-8 w-full mb-8">
+          <div className="flex-shrink-0 flex items-center justify-center">
+            {(product.images && product.images.length > 0) ? (
               <img
-                key={idx}
-                src={img}
-                alt={`Product ${idx+1}`}
-                className="w-28 h-28 object-cover rounded-xl border bg-gray-50"
+                src={product.images[0]}
+                alt="Product"
+                className="w-32 h-32 object-cover rounded-2xl border bg-gray-50 shadow"
               />
-            ))
-          ) : (
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/1829/1829586.png"
-              alt="No product"
-              className="w-28 h-28 object-cover rounded-xl border bg-gray-50"
-            />
-          )}
+            ) : (
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/1829/1829586.png"
+                alt="No product"
+                className="w-32 h-32 object-cover rounded-2xl border bg-gray-50 shadow"
+              />
+            )}
+          </div>
+          <div className="flex-1 flex flex-col gap-2 text-lg">
+            <div><span className="font-semibold">Item:</span> {product.item}</div>
+            <div><span className="font-semibold">Date:</span> {new Date(product.createdAt).toLocaleDateString()}</div>
+            <div className="flex items-center gap-2"><span className="font-semibold">Status:</span> <span className={`px-3 py-1 rounded-full font-semibold text-xs ${product.status === 'Recycled' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{product.status}</span></div>
+            <div><span className="font-semibold">Credits Earned:</span> {product.credits}</div>
+            <div><span className="font-semibold">Condition:</span> {product.condition || 'N/A'}</div>
+            <div><span className="font-semibold">CO₂ Saved:</span> {product.co2Saved || 'N/A'} kg</div>
+          </div>
         </div>
-        <div className="mb-2"><span className="font-semibold">Item:</span> {product.item}</div>
-        <div className="mb-2"><span className="font-semibold">Date:</span> {new Date(product.createdAt).toLocaleDateString()}</div>
-        <div className="mb-2"><span className="font-semibold">Status:</span> <span className={`px-3 py-1 rounded-full font-semibold text-xs ${product.status === 'Recycled' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{product.status}</span></div>
-        <div className="mb-2"><span className="font-semibold">Credits Earned:</span> {product.credits}</div>
-        <div className="mb-2"><span className="font-semibold">Condition:</span> {product.condition || 'N/A'}</div>
-        <div className="mb-2"><span className="font-semibold">CO₂ Saved:</span> {product.co2Saved || 'N/A'} kg</div>
-        {/* Add more fields as needed */}
-        {product.status === 'Recycled' && !user.creditHistory?.some(h => h.item === product.item && h.credits === product.credits) && (
+        <div className="flex flex-col md:flex-row gap-4 w-full justify-center mt-4">
+          {product.status === 'Recycled' && !user.creditHistory?.some(h => h.item === product.item && h.credits === product.credits) && (
+            <button
+              className="flex-1 px-6 py-3 rounded-lg bg-green-600 text-white font-bold shadow hover:bg-green-700 transition-colors text-lg"
+              onClick={handleRedeem}
+            >
+              Redeem Credits
+            </button>
+          )}
           <button
-            className="mt-6 px-6 py-3 rounded-lg bg-green-600 text-white font-bold shadow hover:bg-green-700 transition-colors text-lg"
-            onClick={handleRedeem}
+            className="flex-1 px-6 py-3 rounded-lg bg-blue-600 text-white font-bold shadow hover:bg-blue-700 transition-colors text-lg"
+            onClick={handleOpenModal}
           >
-            Redeem Credits
+            Explore Nearby Centers
           </button>
-        )}
-        <button
-          className="mt-4 px-6 py-3 rounded-lg bg-blue-600 text-white font-bold shadow hover:bg-blue-700 transition-colors text-lg"
-          onClick={handleOpenModal}
-        >
-          Explore Nearby Centers
-        </button>
+        </div>
       </div>
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 relative">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
             <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold"
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-3xl font-bold z-50"
               onClick={() => setShowModal(false)}
               aria-label="Close"
             >

@@ -72,8 +72,8 @@ const ContactPage = () => {
           <div className="mt-10">
             <h2 className="font-bold text-lg mb-2">Contact Information</h2>
             <div className="mb-1">Email: <span className="text-gray-700">support@retrustplus.com</span></div>
-            <div className="mb-1">Phone: <span className="text-gray-700">(555) 123-4567</span></div>
-            <div>Address: <span className="text-gray-700">123 Green Lane, Eco City, CA 90210</span></div>
+            <div className="mb-1">Phone: <span className="text-gray-700">+91 7719538411</span></div>
+            <div>Address: <span className="text-gray-700">Indian Institute Of Information Technology Kota</span></div>
           </div>
         </div>
       </div>

@@ -1,26 +1,9 @@
 import React from 'react';
-import axios from 'axios';
-import { useAuth } from '../context/useAuth';
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { useCart } from '../context/CartContext';
 
 const ProductCard = ({ product, onTagClick }) => {
-  const { token, user } = useAuth();
-  const handleRedeem = async () => {
-    if (!user || !token) return alert('Please sign in to redeem credits.');
-    if (user.credits < product.price) return alert('Not enough credits!');
-    try {
-      await axios.post(`${API_URL}/auth/redeem-credits`, {
-        item: product.name,
-        credits: product.price
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      alert('Redeemed successfully!');
-    } catch  {
-      alert('Failed to redeem credits.');
-    }
-  };
+  const { cart, addToCart, updateQty, removeFromCart } = useCart();
+  const cartItem = cart.find(item => item.id === product.id || item.name === product.name);
 
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-200 p-4 flex flex-col items-center group cursor-pointer">
@@ -47,12 +30,30 @@ const ProductCard = ({ product, onTagClick }) => {
       </div>
       <span className="text-xs text-gray-500">CO₂ saved: {product.co2Saved}</span>
       <span className="text-lg font-bold text-green-700 mt-2">{product.price} credits</span>
-      <button
-        className="mt-2 px-4 py-2 rounded bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors"
-        onClick={handleRedeem}
-      >
-        Redeem with Credits
-      </button>
+      {cartItem ? (
+        <div className="flex items-center gap-2 mt-3">
+          <button
+            className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-bold text-lg hover:bg-gray-300"
+            onClick={cartItem.qty > 1 ? () => updateQty(cartItem.id || cartItem.name, cartItem.qty - 1) : () => removeFromCart(cartItem.id || cartItem.name)}
+          >
+            -
+          </button>
+          <span className="font-semibold text-lg">{cartItem.qty}</span>
+          <button
+            className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-bold text-lg hover:bg-gray-300"
+            onClick={() => updateQty(cartItem.id || cartItem.name, cartItem.qty + 1)}
+          >
+            +
+          </button>
+        </div>
+      ) : (
+        <button
+          className="mt-2 px-4 py-2 rounded bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors"
+          onClick={() => addToCart({ ...product, id: product.id || product.name })}
+        >
+          Add to Cart
+        </button>
+      )}
     </div>
   );
 };

@@ -36,6 +36,11 @@ const sidebarItems = [
     icon: <BellIcon className="w-5 h-5 mr-2" />, // We'll add badge logic below
     path: "/profile/notifications",
   },
+  {
+    name: "Order History",
+    icon: <ArrowPathIcon className="w-5 h-5 mr-2" />,
+    path: "/profile/orders",
+  },
 ];
 
 const EditProfileSection = () => {
@@ -446,57 +451,57 @@ const EWasteSection = () => {
       </div>
       {loading ? <div>Loading...</div> : (
         <div className="overflow-x-auto mb-8">
-          <table className="min-w-full bg-white rounded-2xl border border-[#e3eae3] shadow">
+          <table className="min-w-full bg-white rounded-3xl border border-[#e3eae3] shadow-2xl">
             <thead>
               <tr className="text-left text-gray-700 bg-[#f7faf7]">
-                <th className="px-6 py-3">Image</th>
-                <th className="px-6 py-3">Item</th>
-                <th className="px-6 py-3">Date</th>
-                <th className="px-6 py-3">Status</th>
-                <th className="px-6 py-3">Credits Earned</th>
-                <th className="px-6 py-3">Actions</th>
+                <th className="px-6 py-4 text-base font-bold">Image</th>
+                <th className="px-6 py-4 text-base font-bold">Item</th>
+                <th className="px-6 py-4 text-base font-bold">Date</th>
+                <th className="px-6 py-4 text-base font-bold">Status</th>
+                <th className="px-6 py-4 text-base font-bold">Credits Earned</th>
+                <th className="px-6 py-4 text-base font-bold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {sorted.map((row, i) => (
-                <tr key={i} className="border-t">
+                <tr key={i} className="border-t hover:bg-blue-50/30 transition">
                   <td className="px-6 py-4">
                     <img
                       src={row.images && row.images.length > 0 ? row.images[0] : 'https://cdn-icons-png.flaticon.com/512/1829/1829586.png'}
                       alt={row.item}
-                      className="w-14 h-14 object-cover rounded-xl border shadow-sm bg-gray-50"
+                      className="w-16 h-16 object-cover rounded-2xl border shadow bg-gray-50"
                     />
                   </td>
-                  <td className="px-6 py-4">{row.item}</td>
+                  <td className="px-6 py-4 font-semibold text-lg">{row.item}</td>
                   <td className="px-6 py-4 text-green-700 font-medium">{new Date(row.createdAt).toLocaleDateString()}</td>
                   <td className="px-6 py-4">
-                    <span className={`px-4 py-1 rounded-full font-semibold text-xs ${row.status === 'Recycled' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{row.status}</span>
+                    <span className={`px-4 py-1 rounded-full font-semibold text-xs shadow-sm border ${row.status === 'Recycled' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-gray-100 text-gray-800 border-gray-200'}`}>{row.status}</span>
                   </td>
-                  <td className="px-6 py-4 text-green-700 font-bold">{row.credits}</td>
-                  <td className="px-6 py-4 flex gap-2 items-center">
+                  <td className="px-6 py-4 text-green-700 font-bold text-lg">{row.credits}</td>
+                  <td className="px-6 py-4 flex flex-wrap gap-2 items-center min-w-[220px]">
                     <select
                       value={row.status}
                       onChange={e => handleStatusUpdate(row._id, e.target.value)}
-                      className="px-2 py-1 rounded border border-gray-300 text-sm"
+                      className="px-3 py-2 rounded-lg border border-gray-300 text-sm bg-white shadow focus:ring-2 focus:ring-blue-100"
                     >
                       <option value="In Transit">In Transit</option>
                       <option value="Recycled">Recycled</option>
                     </select>
                     <button
-                      className="px-3 py-1 rounded bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 transition-colors text-sm"
+                      className="px-4 py-2 rounded-lg bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 transition-colors text-sm shadow"
                       onClick={() => navigate(`/ewaste/${row._id}`)}
                     >
                       View Details
                     </button>
                     <button
-                      className="px-3 py-1 rounded bg-red-100 text-red-700 font-semibold hover:bg-red-200 transition-colors text-sm"
+                      className="px-4 py-2 rounded-lg bg-red-100 text-red-700 font-semibold hover:bg-red-200 transition-colors text-sm shadow"
                       onClick={() => handleDelete(row._id)}
                     >
                       Delete
                     </button>
                     {row.status === 'Recycled' && !user.creditHistory?.some(h => h.item === row.item && h.credits === row.credits) && (
                       <button
-                        className="px-3 py-1 rounded bg-green-100 text-green-700 font-semibold hover:bg-green-200 transition-colors text-sm"
+                        className="px-4 py-2 rounded-lg bg-green-100 text-green-700 font-semibold hover:bg-green-200 transition-colors text-sm shadow"
                         onClick={() => handleRedeem(row._id)}
                       >
                         Redeem Credits
@@ -603,6 +608,75 @@ const NotificationsSection = () => {
   );
 };
 
+const OrderHistorySection = () => {
+  const { token } = useAuth();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/orders`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setOrders(res.data);
+      } catch {
+        setOrders([]);
+      }
+      setLoading(false);
+    };
+    fetchOrders();
+  }, [token]);
+  return (
+    <div>
+      <h1 className="text-3xl font-bold mb-8">Order History</h1>
+      {loading ? (
+        <div className="text-gray-600 text-lg text-center py-20">Loading...</div>
+      ) : orders.length === 0 ? (
+        <div className="text-gray-600 text-lg text-center py-20">No orders yet.</div>
+      ) : (
+        <div className="overflow-x-auto rounded-2xl shadow bg-white border border-gray-100">
+          <table className="min-w-full">
+            <thead>
+              <tr className="text-left text-gray-600 bg-gray-50">
+                <th className="px-4 py-3">Date</th>
+                <th className="px-4 py-3">Items</th>
+                <th className="px-4 py-3">Total</th>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Images</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order, i) => (
+                <tr key={i} className="border-t">
+                  <td className="px-4 py-3 text-blue-600">{new Date(order.date).toLocaleString()}</td>
+                  <td className="px-4 py-3">
+                    <ul className="list-disc ml-4">
+                      {order.items.map((item, idx) => (
+                        <li key={idx}>{item.name} x{item.qty}</li>
+                      ))}
+                    </ul>
+                  </td>
+                  <td className="px-4 py-3 font-bold">{order.total} credits</td>
+                  <td className="px-4 py-3">
+                    <span className={`px-3 py-1 rounded-full font-semibold text-xs shadow-sm border ${order.status === 'Delivered' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-gray-100 text-gray-800 border-gray-200'}`}>{order.status}</span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex gap-2 flex-wrap">
+                      {order.images && order.images.length > 0 ? order.images.map((img, idx) => (
+                        <img key={idx} src={img} alt="item" className="w-10 h-10 object-cover rounded border" />
+                      )) : <span className="text-gray-400">-</span>}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ProfileDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -653,6 +727,7 @@ const ProfileDashboard = () => {
           <Route path="/ewaste/:id" element={<EwasteDetailPage />} />
           <Route path="/notifications" element={<NotificationsSection />} />
           <Route path="/returns" element={<ReturnsSection />} />
+          <Route path="/orders" element={<OrderHistorySection />} />
         </Routes>
       </main>
       
