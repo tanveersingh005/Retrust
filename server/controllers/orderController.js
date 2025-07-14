@@ -1,10 +1,17 @@
 import Order from '../models/Order.js';
+import User from '../models/User.js';
 
 export const createOrder = async (req, res) => {
   try {
     const { items, total, images } = req.body;
-    const user = req.user.id;
-    const order = new Order({ user, items, total, images });
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (user.credits < total) {
+      return res.status(400).json({ message: 'Not enough credits' });
+    }
+    user.credits -= total;
+    await user.save();
+    const order = new Order({ user: user._id, items, total, images });
     await order.save();
     res.status(201).json(order);
   } catch (err) {
