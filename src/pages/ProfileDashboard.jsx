@@ -678,22 +678,25 @@ const OrderHistorySection = () => {
 };
 
 const ProfileDashboard = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const unreadCount = user?.notifications?.filter(n => !n.read).length || 0;
   return (
     <>
-    <div className="bg-[#f7faf7] min-h-screen flex pt-8 pb-8">
+    <div className="bg-[#f7faf7] min-h-screen flex flex-col md:flex-row pt-8 pb-8">
       {/* Sidebar */}
-      <aside className="w-72 bg-transparent flex flex-col items-start px-10 pt-16">
-        <div className="flex flex-col items-start mb-10">
+      <aside
+        className="w-full md:w-72 bg-white md:bg-transparent flex flex-col items-center md:items-start px-4 md:px-10 pt-8 md:pt-16 border-b md:border-b-0 md:border-r border-gray-200 md:h-auto md:sticky md:top-0 overflow-y-auto max-h-[60vh] md:max-h-none"
+        style={{ minHeight: '0', flex: 'none' }}
+      >
+        <div className="flex flex-col items-center md:items-start mb-8 md:mb-10 w-full">
           <img
             src={user?.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}
             alt={user?.name}
-            className="w-14 h-14 rounded-full object-cover mb-2"
+            className="w-20 h-20 md:w-14 md:h-14 rounded-full object-cover mb-2"
           />
-          <span className="font-semibold text-lg text-gray-900">
+          <span className="font-semibold text-lg text-gray-900 text-center md:text-left w-full break-words">
             {user?.name}
           </span>
         </div>
@@ -716,9 +719,19 @@ const ProfileDashboard = () => {
             </button>
           ))}
         </nav>
+        {/* Divider and Sign Out button at the bottom */}
+        <div className="w-full flex-1"></div>
+        <div className="w-full mt-6 mb-2 border-t border-gray-200 pt-4 flex flex-col items-center">
+          <button
+            className="w-full px-4 py-2 rounded-lg text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+            onClick={signOut}
+          >
+            Sign Out
+          </button>
+        </div>
       </aside>
       {/* Main Content */}
-      <main className="flex-1 px-8 pt-20">
+      <main className="flex-1 px-2 md:px-8 pt-20">
         <Routes>
           <Route path="/" element={<OverviewSection />} />
           <Route path="/edit" element={<EditProfileSection />} />
@@ -730,7 +743,6 @@ const ProfileDashboard = () => {
           <Route path="/orders" element={<OrderHistorySection />} />
         </Routes>
       </main>
-      
     </div>
     <Footer />
     </>
