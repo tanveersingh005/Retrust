@@ -35,7 +35,7 @@ const CartPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       clearCart();
-      await fetchUser();
+      await fetchUser(token);
       toast.success('Purchase successful! Your credits have been deducted.', {
         position: 'top-center',
         autoClose: 3000,
