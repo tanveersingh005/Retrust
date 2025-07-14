@@ -51,20 +51,18 @@ const Navbar = ({ onSignInClick }) => {
               )}
             </Link>
           ))}
-          {/* Cart Icon - only show if user is signed in */}
-          {user && (
-            <button
-              className="relative ml-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
-              onClick={() => navigate('/cart')}
-            >
-              <FaShoppingCart className="w-6 h-6 text-gray-700" />
-              {cart.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5">
-                  {cart.reduce((sum, item) => sum + item.qty, 0)}
-                </span>
-              )}
-            </button>
-          )}
+          {/* Cart Icon - always show, badge only if signed in */}
+          <button
+            className="relative ml-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
+            onClick={() => navigate('/cart')}
+          >
+            <FaShoppingCart className="w-6 h-6 text-gray-700" />
+            {user && cart.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5">
+                {cart.reduce((sum, item) => sum + item.qty, 0)}
+              </span>
+            )}
+          </button>
         </div>
         {/* User Profile / Sign In - Desktop */}
         {!user ? (
@@ -111,6 +109,12 @@ const Navbar = ({ onSignInClick }) => {
                 className="block px-4 py-2 hover:bg-gray-100 text-gray-700"
               >
                 E-Tracking
+              </Link>
+              <Link
+                to="/profile/orders"
+                className="block px-4 py-2 hover:bg-gray-100 text-gray-700"
+              >
+                Order History
               </Link>
               <button
                 className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
@@ -227,6 +231,13 @@ const Navbar = ({ onSignInClick }) => {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   E-Tracking
+                </Link>
+                <Link
+                  to="/profile/orders"
+                  className="block px-3 py-2 text-gray-700 hover:text-green-700 hover:bg-gray-50 transition-colors duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Order History
                 </Link>
                 <button
                   className="w-full text-left px-3 py-2 text-gray-700 hover:text-green-700 hover:bg-gray-50 transition-colors duration-200"

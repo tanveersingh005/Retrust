@@ -24,10 +24,10 @@ const CartPage = () => {
           name: item.name,
           price: item.price,
           qty: item.qty,
-          image: item.img,
+          image: item.img.startsWith('http') ? item.img : window.location.origin + '/' + item.img.replace(/^\.*\/?/, ''),
         })),
         total,
-        images: cart.map(item => item.img),
+        images: cart.map(item => item.img.startsWith('http') ? item.img : window.location.origin + '/' + item.img.replace(/^\.*\/?/, '')),
       };
       await axios.post(
         `${import.meta.env.VITE_API_URL}/orders`,
