@@ -51,18 +51,20 @@ const Navbar = ({ onSignInClick }) => {
               )}
             </Link>
           ))}
-          {/* Cart Icon */}
-          <button
-            className="relative ml-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
-            onClick={() => navigate('/cart')}
-          >
-            <FaShoppingCart className="w-6 h-6 text-gray-700" />
-            {cart.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5">
-                {cart.reduce((sum, item) => sum + item.qty, 0)}
-              </span>
-            )}
-          </button>
+          {/* Cart Icon - only show if user is signed in */}
+          {user && (
+            <button
+              className="relative ml-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
+              onClick={() => navigate('/cart')}
+            >
+              <FaShoppingCart className="w-6 h-6 text-gray-700" />
+              {cart.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5">
+                  {cart.reduce((sum, item) => sum + item.qty, 0)}
+                </span>
+              )}
+            </button>
+          )}
         </div>
         {/* User Profile / Sign In - Desktop */}
         {!user ? (
