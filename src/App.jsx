@@ -17,6 +17,7 @@ import SignInSignUpModal from "./components/SignInSignUpModal";
 import { useAuth } from './context/useAuth';
 import LoadingSpinner from './components/LoadingSpinner';
 import { CartProvider } from "./context/CartContext";
+import SignupPage from './pages/SignupPage';
 
 const AppContent = () => {
   const [showAuth, setShowAuth] = useState(false);
@@ -43,6 +44,7 @@ const AppContent = () => {
         <Route path="/credits" element={<MyCreditsPage />} />
         <Route path="/profile/*" element={<ProfileDashboard />} />
         <Route path="/ewaste/:id" element={<EwasteDetailPage />} />
+        <Route path="/signup" element={<SignupPage />} />
       </Routes>
     </Router>
   );
