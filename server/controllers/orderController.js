@@ -1,7 +1,6 @@
-const Order = require('../models/Order');
+import Order from '../models/Order.js';
 
-// Create a new order
-exports.createOrder = async (req, res) => {
+export const createOrder = async (req, res) => {
   try {
     const { items, total, images } = req.body;
     const user = req.user.id;
@@ -13,8 +12,7 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-// Get all orders for the logged-in user
-exports.getUserOrders = async (req, res) => {
+export const getUserOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user.id }).sort({ date: -1 });
     res.json(orders);
@@ -23,8 +21,7 @@ exports.getUserOrders = async (req, res) => {
   }
 };
 
-// Get a single order by ID
-exports.getOrderById = async (req, res) => {
+export const getOrderById = async (req, res) => {
   try {
     const order = await Order.findOne({ _id: req.params.id, user: req.user.id });
     if (!order) return res.status(404).json({ message: 'Order not found' });

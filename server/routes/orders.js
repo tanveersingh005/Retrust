@@ -1,13 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const orderController = require('../controllers/orderController');
-const auth = require('../middlewares/auth');
+import express from 'express';
+import orderController from '../controllers/orderController.js';
+import auth from '../middlewares/auth.js';
 
-// Create a new order
+const router = express.Router();
+
 router.post('/', auth, orderController.createOrder);
-// Get all orders for the logged-in user
 router.get('/', auth, orderController.getUserOrders);
-// Get a single order by ID
 router.get('/:id', auth, orderController.getOrderById);
 
-module.exports = router; 
+export default router;
