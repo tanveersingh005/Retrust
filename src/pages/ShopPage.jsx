@@ -126,7 +126,7 @@ const allProducts = [
   },
   {
     name: 'Bamboo Toothbrush Set',
-    img: './assets/bamboo-toothbrush.jpg',
+    img: './assets/toothbrush.jpg',
     condition: 'Excellent',
     confidence: '99%',
     co2Saved: 1,
