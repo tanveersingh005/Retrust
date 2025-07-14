@@ -4,7 +4,7 @@ import { useAuth } from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { FaShoppingCart } from 'react-icons/fa';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 

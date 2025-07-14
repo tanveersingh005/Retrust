@@ -52,6 +52,7 @@ export const AuthProvider = ({ children }) => {
         setError("Session expired. Please sign in again.");
       } else {
         setError("Failed to fetch user data.");
+        // Do NOT clear user/token for other errors!
       }
       return null;
     }
