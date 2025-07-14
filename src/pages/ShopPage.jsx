@@ -125,16 +125,6 @@ const allProducts = [
     tags: ['Eco', 'Budget'],
   },
   {
-    name: 'Bamboo Toothbrush Set',
-    img: './assets/toothbrush.jpg',
-    condition: 'Excellent',
-    confidence: '99%',
-    co2Saved: 1,
-    price: 8,
-    category: 'Accessories',
-    tags: ['Eco', 'Popular', 'Budget'],
-  },
-  {
     name: 'LED Desk Lamp',
     img: './assets/led-lamp.jpg',
     condition: 'Good',
