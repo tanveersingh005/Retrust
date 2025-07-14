@@ -19,8 +19,7 @@ import LoadingSpinner from './components/LoadingSpinner';
 import { CartProvider } from "./context/CartContext";
 import SignupPage from './pages/SignupPage';
 
-const AppContent = () => {
-  const [showAuth, setShowAuth] = useState(false);
+const AppContent = ({ showAuth, setShowAuth }) => {
   const { loading } = useAuth();
 
   if (loading) return <LoadingSpinner />;
@@ -34,7 +33,7 @@ const AppContent = () => {
       />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/shop" element={<ShopPage onSignInClick={() => setShowAuth(true)} />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/return" element={<ReturnProductPage />} />
         <Route path="/impact" element={<ImpactDashboard />} />
@@ -50,12 +49,15 @@ const AppContent = () => {
   );
 };
 
-const App = () => (
-  <AuthProvider>
-    <CartProvider>
-      <AppContent />
-    </CartProvider>
-  </AuthProvider>
-);
+const App = () => {
+  const [showAuth, setShowAuth] = useState(false);
+  return (
+    <AuthProvider>
+      <CartProvider>
+        <AppContent showAuth={showAuth} setShowAuth={setShowAuth} />
+      </CartProvider>
+    </AuthProvider>
+  );
+};
 
 export default App;

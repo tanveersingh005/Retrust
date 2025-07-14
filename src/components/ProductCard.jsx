@@ -1,12 +1,10 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 
-const ProductCard = ({ product, onTagClick }) => {
+const ProductCard = ({ product, onTagClick, onSignInClick }) => {
   const { cart, addToCart, updateQty, removeFromCart } = useCart();
   const { user } = useAuth();
-  const navigate = useNavigate();
   const cartItem = cart.find(item => item.id === product.id || item.name === product.name);
 
   return (
@@ -38,14 +36,14 @@ const ProductCard = ({ product, onTagClick }) => {
         <div className="flex items-center gap-2 mt-3">
           <button
             className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-bold text-lg hover:bg-gray-300"
-            onClick={user ? (cartItem.qty > 1 ? () => updateQty(cartItem.id || cartItem.name, cartItem.qty - 1) : () => removeFromCart(cartItem.id || cartItem.name)) : () => navigate('/signup')}
+            onClick={user ? (cartItem.qty > 1 ? () => updateQty(cartItem.id || cartItem.name, cartItem.qty - 1) : () => removeFromCart(cartItem.id || cartItem.name)) : onSignInClick}
           >
             -
           </button>
           <span className="font-semibold text-lg">{cartItem.qty}</span>
           <button
             className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-bold text-lg hover:bg-gray-300"
-            onClick={user ? () => updateQty(cartItem.id || cartItem.name, cartItem.qty + 1) : () => navigate('/signup')}
+            onClick={user ? () => updateQty(cartItem.id || cartItem.name, cartItem.qty + 1) : onSignInClick}
           >
             +
           </button>
@@ -53,7 +51,7 @@ const ProductCard = ({ product, onTagClick }) => {
       ) : (
         <button
           className="mt-2 px-4 py-2 rounded bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors"
-          onClick={user ? () => addToCart({ ...product, id: product.id || product.name }) : () => navigate('/signup')}
+          onClick={user ? () => addToCart({ ...product, id: product.id || product.name }) : onSignInClick}
         >
           Add to Cart
         </button>

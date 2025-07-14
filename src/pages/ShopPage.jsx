@@ -106,7 +106,7 @@ const allProducts = [
   },
 ];
 
-const ShopPage = () => {
+const ShopPage = ({ onSignInClick }) => {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
   const [condition, setCondition] = useState('All');
@@ -149,7 +149,7 @@ const ShopPage = () => {
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {filteredProducts.map((product, idx) => (
-            <ProductCard key={idx} product={product} onTagClick={setTag} />
+            <ProductCard key={idx} product={product} onTagClick={setTag} onSignInClick={onSignInClick} />
           ))}
         </div>
       </div>
