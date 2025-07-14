@@ -14,7 +14,10 @@ export const register = async (req, res) => {
     user = new User({ name, email, password: hashedPassword, avatar });
     await user.save();
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.status(201).json({ token });
+    const userObj = user.toObject();
+    delete userObj.password;
+    if (!userObj.avatar) userObj.avatar = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+    res.status(201).json({ token, user: userObj });
   } catch {
     res.status(500).json({ message: 'Server error' });
   }
@@ -29,7 +32,10 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token });
+    const userObj = user.toObject();
+    delete userObj.password;
+    if (!userObj.avatar) userObj.avatar = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+    res.json({ token, user: userObj });
   } catch {
     res.status(500).json({ message: 'Server error' });
   }

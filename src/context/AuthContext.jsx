@@ -69,10 +69,20 @@ export const AuthProvider = ({ children }) => {
         password,
         avatar,
       });
-      const jwt = res.data.token;
-      await fetchUser(jwt);
-      setLoading(false);
-      return true;
+      if (res.data.user && res.data.token) {
+        setUser(res.data.user);
+        setToken(res.data.token);
+        setLoading(false);
+        return true;
+      } else if (res.data.token) {
+        // fallback: fetch user if not present in response
+        await fetchUser(res.data.token);
+        setLoading(false);
+        return true;
+      } else {
+        setLoading(false);
+        return false;
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed.");
       setLoading(false);
@@ -86,10 +96,20 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const res = await axios.post(`${API_URL}/login`, { email, password });
-      const jwt = res.data.token;
-      await fetchUser(jwt);
-      setLoading(false);
-      return true;
+      if (res.data.user && res.data.token) {
+        setUser(res.data.user);
+        setToken(res.data.token);
+        setLoading(false);
+        return true;
+      } else if (res.data.token) {
+        // fallback: fetch user if not present in response
+        await fetchUser(res.data.token);
+        setLoading(false);
+        return true;
+      } else {
+        setLoading(false);
+        return false;
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed.");
       setLoading(false);
