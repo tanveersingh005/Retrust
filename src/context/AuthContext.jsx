@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { AuthContext } from './AuthContextContext';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { AuthContext } from "./AuthContextContext";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
-
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -13,8 +12,8 @@ export const AuthProvider = ({ children }) => {
 
   // Load user/token from localStorage on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem('retrust_user');
-    const storedToken = localStorage.getItem('retrust_token');
+    const storedUser = localStorage.getItem("retrust_user");
+    const storedToken = localStorage.getItem("retrust_token");
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
@@ -25,11 +24,11 @@ export const AuthProvider = ({ children }) => {
   // Persist user/token to localStorage
   useEffect(() => {
     if (user && token) {
-      localStorage.setItem('retrust_user', JSON.stringify(user));
-      localStorage.setItem('retrust_token', token);
+      localStorage.setItem("retrust_user", JSON.stringify(user));
+      localStorage.setItem("retrust_token", token);
     } else {
-      localStorage.removeItem('retrust_user');
-      localStorage.removeItem('retrust_token');
+      localStorage.removeItem("retrust_user");
+      localStorage.removeItem("retrust_token");
     }
   }, [user, token]);
 
@@ -43,10 +42,17 @@ export const AuthProvider = ({ children }) => {
       setToken(jwt);
       setError(null);
       return res.data;
-    } catch {
-      setUser(null);
-      setToken(null);
-      setError('Failed to fetch user data.');
+    } catch (err) {
+      if (
+        err.response &&
+        (err.response.status === 401 || err.response.status === 403)
+      ) {
+        setUser(null);
+        setToken(null);
+        setError("Session expired. Please sign in again.");
+      } else {
+        setError("Failed to fetch user data.");
+      }
       return null;
     }
   };
@@ -56,13 +62,18 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.post(`${API_URL}/register`, { name, email, password, avatar });
+      const res = await axios.post(`${API_URL}/register`, {
+        name,
+        email,
+        password,
+        avatar,
+      });
       const jwt = res.data.token;
       await fetchUser(jwt);
       setLoading(false);
       return true;
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed.');
+      setError(err.response?.data?.message || "Registration failed.");
       setLoading(false);
       return false;
     }
@@ -79,7 +90,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
       return true;
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed.');
+      setError(err.response?.data?.message || "Login failed.");
       setLoading(false);
       return false;
     }
@@ -95,7 +106,10 @@ export const AuthProvider = ({ children }) => {
   // Update Profile (local only for now)
   const updateProfile = (updates) => {
     setUser((prev) => {
-      const newAvatar = updates.avatar ? updates.avatar : prev.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+      const newAvatar = updates.avatar
+        ? updates.avatar
+        : prev.avatar ||
+          "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
       return { ...prev, ...updates, avatar: newAvatar };
     });
   };
@@ -113,14 +127,27 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
       return true;
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update impact.');
+      setError(err.response?.data?.message || "Failed to update impact.");
       setLoading(false);
       return false;
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, signIn, signUp, signOut, updateProfile, updateImpact, loading, error, fetchUser }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        signIn,
+        signUp,
+        signOut,
+        updateProfile,
+        updateImpact,
+        loading,
+        error,
+        fetchUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

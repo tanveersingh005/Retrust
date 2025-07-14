@@ -4,6 +4,9 @@ import { useAuth } from '../context/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { FaShoppingCart } from 'react-icons/fa';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const CartPage = () => {
   const { cart, updateQty, removeFromCart, clearCart } = useCart();
@@ -33,8 +36,12 @@ const CartPage = () => {
       );
       clearCart();
       await fetchUser();
-      alert('Purchase successful! Your credits have been deducted.');
-      navigate('/shop');
+      toast.success('Purchase successful! Your credits have been deducted.', {
+        position: 'top-center',
+        autoClose: 3000,
+        icon: '🛒',
+      });
+      setTimeout(() => navigate('/shop'), 1200);
     } catch (err) {
       alert('Failed to place order. ' + (err?.response?.data?.message || err.message || 'Please try again.'));
     }
@@ -114,6 +121,7 @@ const CartPage = () => {
           </button>
         )}
       </div>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };
