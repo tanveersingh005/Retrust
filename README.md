@@ -4,8 +4,6 @@ A premium, full-stack circular economy platform for refurbished electronics trad
 
 ![ReTrust+ Hero Preview](./public/hero-preview.jpg)
 
-*Note: The hero preview image is stored locally in your workspace artifacts. Please copy `media__1781581614612.jpg` from the artifacts directory to `public/hero-preview.jpg` to display it on GitHub.*
-
 ---
 
 ## 🌟 Key Features
