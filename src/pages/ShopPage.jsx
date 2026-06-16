@@ -221,8 +221,21 @@ const ShopPage = ({ onSignInClick }) => {
 
   return (
     <>
-    <div className="bg-[#f7faf7] min-h-screen w-full pt-24 pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8">
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen w-full pt-28 pb-16 transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+        {/* Page Header */}
+        <div className="mb-10">
+          <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/40 px-3 py-1.5 rounded-full">
+            Circular Store
+          </span>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-3">
+            Shop Refurbished
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 leading-relaxed max-w-xl">
+            Choose quality refurbished gear. Each purchase saves carbon emissions and keeps valuable materials in circulation.
+          </p>
+        </div>
+
         <ShopFilters
           search={search}
           setSearch={setSearch}
@@ -237,11 +250,20 @@ const ShopPage = ({ onSignInClick }) => {
           tag={tag}
           setTag={setTag}
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {filteredProducts.map((product, idx) => (
-            <ProductCard key={idx} product={product} onTagClick={setTag} onSignInClick={onSignInClick} />
-          ))}
-        </div>
+        
+        {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {filteredProducts.map((product, idx) => (
+              <ProductCard key={idx} product={product} onTagClick={setTag} onSignInClick={onSignInClick} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/60 dark:border-slate-800/80 shadow-sm max-w-md mx-auto">
+            <span className="text-4xl">🔍</span>
+            <h3 className="font-bold text-slate-800 dark:text-slate-200 text-lg mt-4">No products found</h3>
+            <p className="text-slate-400 dark:text-slate-500 text-sm mt-2">Try adjusting your filters or search keywords.</p>
+          </div>
+        )}
       </div>
     </div>
     <Footer />

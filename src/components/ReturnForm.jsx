@@ -31,49 +31,110 @@ const ReturnForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto w-full animate-fade-in-up">
-      <h2 className="text-2xl font-bold mb-6 text-gray-900">List Your Item</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/60 dark:border-slate-800 shadow-xl p-8 max-w-2xl mx-auto w-full animate-fade-in-up space-y-6 relative overflow-hidden transition-colors duration-300"
+    >
+      <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-teal-500 to-emerald-500" />
+      
+      <div>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">List Your Recycle Item</h2>
+        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 leading-normal">
+          Provide accurate details and upload product images to help our team verify and grade your return.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Product Type</label>
-          <select name="productType" value={form.productType} onChange={handleChange} className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none">
-            {productTypes.map(opt => <option key={opt}>{opt}</option>)}
-          </select>
+          <label className="block text-xs font-bold text-slate-500 dark:text-slate-450 uppercase tracking-wider mb-2">Product Type</label>
+          <div className="relative">
+            <select
+              name="productType"
+              value={form.productType}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-teal-500 focus:bg-white dark:focus:bg-slate-900 text-sm transition-all appearance-none cursor-pointer"
+            >
+              {productTypes.map(opt => <option key={opt} className="dark:bg-slate-900 dark:text-white">{opt}</option>)}
+            </select>
+            <span className="absolute right-4 top-3.5 pointer-events-none text-slate-400 dark:text-slate-500 text-xs">▼</span>
+          </div>
         </div>
+
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-          <select name="category" value={form.category} onChange={handleChange} className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none">
-            {categories.map(opt => <option key={opt}>{opt}</option>)}
-          </select>
+          <label className="block text-xs font-bold text-slate-500 dark:text-slate-450 uppercase tracking-wider mb-2">Category</label>
+          <div className="relative">
+            <select
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-teal-500 focus:bg-white dark:focus:bg-slate-900 text-sm transition-all appearance-none cursor-pointer"
+            >
+              {categories.map(opt => <option key={opt} className="dark:bg-slate-900 dark:text-white">{opt}</option>)}
+            </select>
+            <span className="absolute right-4 top-3.5 pointer-events-none text-slate-400 dark:text-slate-500 text-xs">▼</span>
+          </div>
         </div>
+
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Condition Guess</label>
-          <select name="condition" value={form.condition} onChange={handleChange} className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none">
-            {conditions.map(opt => <option key={opt}>{opt}</option>)}
-          </select>
+          <label className="block text-xs font-bold text-slate-500 dark:text-slate-450 uppercase tracking-wider mb-2">Estimated Condition</label>
+          <div className="relative">
+            <select
+              name="condition"
+              value={form.condition}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-teal-500 focus:bg-white dark:focus:bg-slate-900 text-sm transition-all appearance-none cursor-pointer"
+            >
+              {conditions.map(opt => <option key={opt} className="dark:bg-slate-900 dark:text-white">{opt}</option>)}
+            </select>
+            <span className="absolute right-4 top-3.5 pointer-events-none text-slate-400 dark:text-slate-500 text-xs">▼</span>
+          </div>
         </div>
+
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-          <input name="location" value={form.location} onChange={handleChange} className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none" placeholder="Enter Location" />
+          <label className="block text-xs font-bold text-slate-500 dark:text-slate-450 uppercase tracking-wider mb-2">Location / Pin Code</label>
+          <input
+            name="location"
+            value={form.location}
+            onChange={handleChange}
+            placeholder="e.g. Jaipur, Rajasthan"
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-teal-500 focus:bg-white dark:focus:bg-slate-900 text-sm transition-all"
+          />
         </div>
       </div>
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-        <textarea name="description" value={form.description} onChange={handleChange} className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none" rows={3} placeholder="Describe your item" />
+
+      <div>
+        <label className="block text-xs font-bold text-slate-500 dark:text-slate-450 uppercase tracking-wider mb-2">Detailed Description</label>
+        <textarea
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+          rows={3}
+          placeholder="Please describe any defects, scratches, or wear-and-tear..."
+          className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-teal-500 focus:bg-white dark:focus:bg-slate-900 text-sm transition-all"
+        />
       </div>
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Upload Product Images</label>
+
+      <div>
+        <label className="block text-xs font-bold text-slate-500 dark:text-slate-450 uppercase tracking-wider mb-3">Product Images</label>
         <ImageUploader images={form.images} setImages={handleImages} loading={loading} setLoading={setLoading} />
       </div>
-      <button type="submit" className="w-full py-3 rounded-lg bg-primary text-gray-700 font-medium text-lg shadow hover:bg-primary-dark transition-colors duration-200">Submit</button>
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full py-4 rounded-2xl bg-teal-650 hover:bg-teal-700 active:scale-95 text-white font-bold text-sm shadow-lg shadow-teal-700/10 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Submit Listing
+      </button>
+
       {loading && (
         <div className="flex flex-col items-center mt-4">
-          <PacmanLoader color="#15803d" size={32} speedMultiplier={4} />
-          <span className="mt-2 text-green-800 font-semibold text-lg animate-pulse">Uploading</span>
+          <PacmanLoader color="#0d9488" size={12} speedMultiplier={2} />
+          <span className="mt-3 text-teal-800 dark:text-teal-400 font-bold text-xs animate-pulse">Uploading product photos...</span>
         </div>
       )}
     </form>
   );
 };
 
-export default ReturnForm; 
+export default ReturnForm;

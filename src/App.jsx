@@ -18,6 +18,7 @@ import { useAuth } from './context/useAuth';
 import LoadingSpinner from './components/LoadingSpinner';
 import { CartProvider } from "./context/CartContext";
 import SignupPage from './pages/SignupPage';
+import { ThemeProvider } from "./context/ThemeContext";
 
 const AppContent = ({ showAuth, setShowAuth }) => {
   const { loading } = useAuth();
@@ -52,11 +53,13 @@ const AppContent = ({ showAuth, setShowAuth }) => {
 const App = () => {
   const [showAuth, setShowAuth] = useState(false);
   return (
-    <AuthProvider>
-      <CartProvider>
-        <AppContent showAuth={showAuth} setShowAuth={setShowAuth} />
-      </CartProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <CartProvider>
+          <AppContent showAuth={showAuth} setShowAuth={setShowAuth} />
+        </CartProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

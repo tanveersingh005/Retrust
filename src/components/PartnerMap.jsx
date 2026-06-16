@@ -64,8 +64,8 @@ const PartnerMap = ({ partners = [], onMarkerDrag, markerPos = [51.505, -0.09] }
             icon={markerIcon}
           >
             <Popup>
-              <div className="font-bold">{partner.name}</div>
-              <div className="text-xs text-gray-600">{partner.address}</div>
+              <div className="font-bold text-slate-800 dark:text-slate-200">{partner.name}</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">{partner.address}</div>
             </Popup>
           </Marker>
         ))}

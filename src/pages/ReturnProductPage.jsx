@@ -183,130 +183,201 @@ const ReturnProductPage = () => {
         pauseOnHover
         theme="colored"
       />
-      <div className="bg-[#f7faf7] min-h-screen w-full pt-24 pb-12 bg-gradient-to-br from-[#f8fafc] via-white to-[#e6f0ee] relative">
+      <div className="bg-slate-50 dark:bg-slate-950 min-h-screen w-full pt-28 pb-16 relative overflow-hidden transition-colors duration-300">
+        {/* Decorative background gradients */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/5 dark:bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
         {submitting && (
-          <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm">
-            <PacmanLoader color="#15803d" size={32} speedMultiplier={4} />
-            <span className="mt-4 text-green-800 font-semibold text-lg animate-pulse">Submitting...</span>
+          <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900/60 backdrop-blur-md">
+            <PacmanLoader color="#0d9488" size={16} speedMultiplier={2} />
+            <span className="mt-4 text-white font-bold text-sm tracking-wide animate-pulse">Processing your return...</span>
           </div>
         )}
-        <div className="max-w-4xl mx-auto px-4 sm:px-8">
-          <div className="mb-10 text-center">
-            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2 tracking-tight">Return or List Your Product</h1>
-            <p className="text-gray-500 text-base md:text-lg max-w-2xl mx-auto">Fill out the form below to list your item for return, resale, or donation. Help us build a more sustainable future!</p>
+
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 relative z-10">
+          <div className="mb-12 text-center max-w-xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/40 px-3.5 py-1.5 rounded-full">
+              Recycle Program
+            </span>
+            <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-4 tracking-tight">Return or List Your Item</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-3 leading-relaxed">List items for refurbishment or recycling. Track carbon offsets and earn instant eco-credits.</p>
           </div>
+
           {!submitted ? (
             <ReturnForm onSubmit={handleSubmit} />
           ) : (
-            <>
-              <div className="bg-white rounded-3xl shadow-2xl p-8 mb-10 animate-fade-in-up border border-[#e0e7ef] max-w-2xl mx-auto">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-green-100">
-                      <svg width="28" height="28" fill="none" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-13h2v6h-2zm0 8h2v2h-2z" fill="#15803d"/></svg>
-                    </span>
+            <div className="space-y-8 animate-fade-in-up">
+              {/* Impact summary card */}
+              <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/60 dark:border-slate-800 shadow-xl p-8 max-w-2xl mx-auto relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-500 to-teal-500" />
+                
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                  <span>🎉</span> Item Submitted Successfully
+                </h2>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8 border-b border-slate-100 dark:border-slate-800 pb-6">
+                  {/* CO2 Saved */}
+                  <div className="bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-100/60 dark:border-emerald-900/30 rounded-2xl p-5 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center text-emerald-700 dark:text-emerald-400 font-bold shrink-0">
+                      🌱
+                    </div>
                     <div>
-                      <div className="text-xs text-gray-500 font-medium">CO₂ Saved</div>
-                      <div className="text-3xl font-extrabold text-green-700 leading-tight">{impact?.co2 || 0}kg</div>
+                      <div className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">CO₂ Saved</div>
+                      <div className="text-2xl font-black text-emerald-800 dark:text-emerald-400 leading-none mt-1">
+                        {impact?.co2 || 0}<span className="text-xs font-semibold ml-0.5">kg</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end">
-                    <div className="text-xs text-gray-500 font-medium flex items-center gap-1">
-                      <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="12" r="10" stroke="#2563eb" strokeWidth="2"/></svg>
-                      Smart Decision
+
+                  {/* Credits Earned */}
+                  <div className="bg-teal-50/50 dark:bg-teal-950/10 border border-teal-100/60 dark:border-teal-900/30 rounded-2xl p-5 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-teal-100 dark:bg-teal-950 flex items-center justify-center text-teal-700 dark:text-teal-400 font-bold shrink-0">
+                      🪙
                     </div>
-                    <div className="text-2xl font-bold text-blue-700 leading-tight">{impact?.item || 'Other'}</div>
+                    <div>
+                      <div className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Credits Earned</div>
+                      <div className="text-2xl font-black text-teal-800 dark:text-teal-400 leading-none mt-1">
+                        {impact?.credits || 0}<span className="text-xs font-semibold ml-0.5">cr</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="mb-6">
-                  <div className="text-sm text-gray-600 font-semibold mb-2">Next Steps</div>
-                  <div className="flex flex-wrap gap-3 mb-2">
-                    <span className="px-4 py-2 rounded-lg bg-blue-50 text-blue-700 font-semibold shadow-sm border border-blue-100">Resell</span>
-                    <span className="px-4 py-2 rounded-lg bg-yellow-50 text-yellow-700 font-semibold shadow-sm border border-yellow-100">Repair</span>
-                    <span className="px-4 py-2 rounded-lg bg-green-50 text-green-700 font-semibold shadow-sm border border-green-100">Recycle</span>
-                    <span className="px-4 py-2 rounded-lg bg-purple-50 text-purple-700 font-semibold shadow-sm border border-purple-100">Donate</span>
+
+                <div className="space-y-6">
+                  {/* Details summary */}
+                  <div className="grid grid-cols-2 gap-4 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 rounded-2xl p-4">
+                    <div>
+                      <span className="text-slate-400 dark:text-slate-500 text-xs block font-medium">Product Category</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200 mt-0.5 block">{impact?.item || 'Other'}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 dark:text-slate-500 text-xs block font-medium">Reported Condition</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200 mt-0.5 block">{impact?.condition || 'Excellent'}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="mb-6">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-600 font-semibold">Sustainability Progress</span>
-                    <span className="text-xs text-gray-500 font-semibold">{impact?.co2 ? Math.min(Math.round((impact.co2/100)*100), 100) : 2}%</span>
+
+                  {/* Next actions tags */}
+                  <div>
+                    <div className="text-xs font-bold text-slate-500 dark:text-slate-450 uppercase tracking-wider mb-2.5">
+                      Target Lifecycle Actions
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <span className="px-3 py-1.5 text-xs font-bold rounded-lg bg-teal-50 dark:bg-teal-950/30 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-900/40">Resell</span>
+                      <span className="px-3 py-1.5 text-xs font-bold rounded-lg bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-900/40">Repair</span>
+                      <span className="px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/40">Recycle</span>
+                      <span className="px-3 py-1.5 text-xs font-bold rounded-lg bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400 border border-purple-100 dark:border-purple-900/40">Donate</span>
+                    </div>
                   </div>
-                  <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-green-400 to-green-700 rounded-full transition-all duration-700" style={{ width: `${impact?.co2 ? Math.min(Math.round((impact.co2/100)*100), 100) : 2}%` }}></div>
+
+                  {/* Progress Meter */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sustainability Impact</span>
+                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-450">{impact?.co2 ? Math.min(Math.round((impact.co2/100)*100), 100) : 2}%</span>
+                    </div>
+                    <div className="w-full h-3 bg-slate-100 dark:bg-slate-950 rounded-full overflow-hidden border border-slate-200/30 dark:border-slate-800">
+                      <div
+                        className="h-full bg-gradient-to-r from-emerald-400 to-teal-600 rounded-full transition-all duration-700"
+                        style={{ width: `${impact?.co2 ? Math.min(Math.round((impact.co2/100)*100), 100) : 2}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="flex justify-end mt-1 text-xs text-gray-500 font-semibold">Credits Earned: <span className="ml-1 text-green-700 font-bold">{impact?.credits || 0}</span></div>
                 </div>
               </div>
-              <div className="flex flex-col items-center gap-4">
+
+              {/* Action buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto">
                 <button
-                  className="px-6 py-3 rounded-lg bg-blue-600 text-white font-bold shadow hover:bg-blue-700 transition-colors duration-200 text-lg"
+                  className="w-full sm:w-auto px-6 py-3.5 bg-teal-650 hover:bg-teal-700 text-white font-bold text-sm rounded-2xl shadow-lg shadow-teal-700/10 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
                   onClick={handleOpenModal}
                 >
-                  <span className="inline-flex items-center gap-2">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z" fill="#fff"/></svg>
-                    Find Nearby Centers
-                  </span>
+                  📍 Find Nearby Centers
                 </button>
-              </div>
-            {showModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-                <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
+
+                {!redeemed ? (
                   <button
-                    className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-3xl font-bold z-50"
-                    onClick={() => setShowModal(false)}
-                    aria-label="Close"
-                  >
-                    &times;
-                  </button>
-                  <h2 className="text-xl font-bold mb-4 text-center">Nearby Recycling Centers</h2>
-                  <input
-                    type="text"
-                    value={location}
-                    onChange={handleLocationChange}
-                    placeholder="Enter your location"
-                    className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-white mb-4 focus:outline-none focus:ring-2 focus:ring-[#2196f3]/30 text-base"
-                  />
-                  <PartnerMap partners={partners} onMarkerDrag={handleMarkerDrag} markerPos={markerPos} />
-                  {markerAddress && (
-                    <div className="mb-4 text-center text-gray-700 font-medium">Selected Address: {markerAddress}</div>
-                  )}
-                  <div className="mb-8">
-                    <h3 className="text-lg font-bold mb-2">Local Partners</h3>
-                    {loadingPartners && <div className="text-blue-600 font-semibold mb-4">Searching for centers...</div>}
-                    {partners.length === 0 && !loadingPartners && (
-                      <>
-                        <div className="text-gray-500 mb-4">No partners found nearby. Here are some trusted centers you can contact:</div>
-                        {HARDCODED_PARTNERS.map((partner, idx) => (
-                          <PartnerCard key={idx} partner={partner} onSchedule={() => alert(`Schedule requested for ${partner.name}`)} />
-                        ))}
-                      </>
-                    )}
-                    {partners.map((partner, idx) => (
-                      <PartnerCard key={idx} partner={partner} onSchedule={() => alert(`Schedule requested for ${partner.name}`)} />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-              <div className="flex flex-col items-center mt-8 gap-4">
-                {!redeemed && (
-                  <button
-                    className="px-6 py-3 rounded-lg bg-[#2e7d32] text-white font-bold border border-[#2e7d32] shadow hover:bg-[#256427] transition-colors duration-200"
+                    className="w-full sm:w-auto px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-2xl shadow-lg shadow-emerald-700/10 active:scale-95 transition-all cursor-pointer"
                     onClick={handleRedeem}
                   >
                     Redeem Credits
                   </button>
+                ) : (
+                  <div className="px-6 py-3.5 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-450 font-bold text-sm rounded-2xl border border-emerald-100 dark:border-emerald-900/30 text-center w-full sm:w-auto">
+                    Credits Redeemed!
+                  </div>
                 )}
-                {redeemed && <div className="text-green-700 font-bold">Credits redeemed and added to your account!</div>}
+
                 <button
-                  className="px-6 py-3 rounded-lg bg-gray-200 text-gray-700 font-bold border border-gray-300 shadow hover:bg-gray-300 transition-colors duration-200"
+                  className="w-full sm:w-auto px-6 py-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-655 dark:text-slate-300 font-bold text-sm rounded-2xl active:scale-95 transition-all cursor-pointer"
                   onClick={handleReset}
                 >
-                  Submit Another Item
+                  Submit Another
                 </button>
               </div>
-            </>
+            </div>
+          )}
+
+          {/* Map Modal */}
+          {showModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+              {/* Backdrop */}
+              <div
+                className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+                onClick={() => setShowModal(false)}
+              />
+
+              <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-2xl max-w-2xl w-full p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto z-10 space-y-6">
+                <button
+                  className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-850 transition duration-200"
+                  onClick={() => setShowModal(false)}
+                  aria-label="Close"
+                >
+                  <span className="text-xl">&times;</span>
+                </button>
+
+                <div className="text-center">
+                  <h2 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">Nearby Recycling Centers</h2>
+                  <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">Locate verified partners to drop off your recycled items.</p>
+                </div>
+
+                <input
+                  type="text"
+                  value={location}
+                  onChange={handleLocationChange}
+                  placeholder="Enter pin code or city (e.g. Jaipur)"
+                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white focus:outline-none focus:border-teal-500 focus:bg-white dark:focus:bg-slate-900 text-sm transition-all"
+                />
+
+                <PartnerMap partners={partners} onMarkerDrag={handleMarkerDrag} markerPos={markerPos} />
+
+                {markerAddress && (
+                  <div className="text-xs text-center font-semibold text-slate-605 dark:text-slate-350 bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800/80 rounded-xl p-3">
+                    Selected Address: {markerAddress}
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <h3 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider">Local Partners</h3>
+                  {loadingPartners && <div className="text-teal-600 dark:text-teal-400 font-semibold text-xs">Searching for centers...</div>}
+                  
+                  <div className="space-y-3">
+                    {partners.length === 0 && !loadingPartners ? (
+                      <>
+                        <p className="text-slate-400 dark:text-slate-500 text-xs">No partners found nearby. Here are some trusted centers you can contact:</p>
+                        {HARDCODED_PARTNERS.map((partner, idx) => (
+                          <PartnerCard key={idx} partner={partner} onSchedule={() => alert(`Schedule requested for ${partner.name}`)} />
+                        ))}
+                      </>
+                    ) : (
+                      partners.map((partner, idx) => (
+                        <PartnerCard key={idx} partner={partner} onSchedule={() => alert(`Schedule requested for ${partner.name}`)} />
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </div>
@@ -315,4 +386,4 @@ const ReturnProductPage = () => {
   );
 };
 
-export default ReturnProductPage; 
+export default ReturnProductPage;

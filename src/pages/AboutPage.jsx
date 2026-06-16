@@ -1,25 +1,20 @@
 import React from 'react';
 import Footer from '../components/Footer';
+import { Clock, Shield, Users, Package, Trash2, UserCheck, Cpu, Sparkles } from 'lucide-react';
 
 const values = [
   {
-    icon: (
-      <svg className="w-7 h-7 text-green-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M12 6v6l4 2" /></svg>
-    ),
+    icon: <Clock className="w-6 h-6 text-white" />,
     title: 'Sustainability',
     desc: 'We are committed to minimizing environmental impact through circular retail practices.'
   },
   {
-    icon: (
-      <svg className="w-7 h-7 text-green-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-    ),
+    icon: <Shield className="w-6 h-6 text-white" />,
     title: 'Trust',
     desc: 'We ensure a secure and transparent platform for all transactions.'
   },
   {
-    icon: (
-      <svg className="w-7 h-7 text-green-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M8 12l2 2 4-4" /></svg>
-    ),
+    icon: <Users className="w-6 h-6 text-white" />,
     title: 'Community',
     desc: 'We foster a community of conscious consumers and sellers.'
   },
@@ -49,54 +44,108 @@ const team = [
 ];
 
 const impact = [
-  { label: 'Items Rehomed', value: '10,000+', icon: (
-    <svg className="w-8 h-8 text-green-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M12 6v6l4 2" /></svg>
-  ) },
-  { label: 'Waste Reduced', value: '50 Tons', icon: (
-    <svg className="w-8 h-8 text-blue-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-  ) },
-  { label: 'Community Members', value: '5,000+', icon: (
-    <svg className="w-8 h-8 text-purple-600 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M8 12l2 2 4-4" /></svg>
-  ) },
+  { label: 'Items Rehomed', value: '10,000+', icon: <Package className="w-7 h-7 text-white" /> },
+  { label: 'Waste Reduced', value: '50 Tons', icon: <Trash2 className="w-7 h-7 text-white" /> },
+  { label: 'Community Members', value: '5,000+', icon: <UserCheck className="w-7 h-7 text-white" /> },
 ];
 
 const AboutPage = () => (
 
   <>
-    <div className="bg-[#f7faf7] min-h-screen w-full pt-24 pb-12">
-      <div className="max-w-5xl mx-auto px-4 sm:px-8">
-        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">About ReTrust+</h1>
-        <p className="text-gray-700 text-base md:text-lg mb-10 max-w-3xl">ReTrust+ is a sustainable commerce platform dedicated to promoting circular retail. Our mission is to reduce waste and extend the life cycle of products by facilitating the buying and selling of pre-owned items. We envision a future where sustainable consumption is the norm, and every product finds a new home.</p>
-        <h2 className="text-xl font-bold mb-4">Our Values</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {values.map((v, idx) => (
-            <div key={idx} className="bg-[#f1f6f2] rounded-xl p-6 flex flex-col items-start border border-[#e3eae3]">
-              <div className="mb-3">{v.icon}</div>
-              <div className="font-semibold text-lg mb-1 text-gray-900">{v.title}</div>
-              <div className="text-gray-600 text-sm">{v.desc}</div>
-            </div>
-          ))}
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen w-full pt-28 pb-16 relative overflow-hidden transition-colors duration-300">
+      {/* Decorative blur orbs */}
+      <div className="absolute top-20 -left-32 w-96 h-96 bg-teal-500/10 dark:bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-40 -right-32 w-96 h-96 bg-emerald-500/10 dark:bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-teal-400/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 relative z-10">
+        {/* Page Header */}
+        <div className="mb-12">
+          <div className="inline-flex items-center gap-2 bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-900/30 text-teal-700 dark:text-teal-400 px-4 py-1.5 rounded-full text-sm font-bold mb-4">
+            <Sparkles className="w-4 h-4" />
+            Our Story
+          </div>
+          <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
+            About <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">ReTrust+</span>
+          </h1>
+          <p className="text-slate-650 dark:text-slate-400 text-base md:text-lg max-w-3xl leading-relaxed">ReTrust+ is a sustainable commerce platform dedicated to promoting circular retail. Our mission is to reduce waste and extend the life cycle of products by facilitating the buying and selling of pre-owned items. We envision a future where sustainable consumption is the norm, and every product finds a new home.</p>
         </div>
-        <h2 className="text-xl font-bold mb-4">Our Team</h2>
-        <div className="flex flex-col md:flex-row gap-28 mb-12 items-left justify-center">
-          {team.map((member, idx) => (
-            <div key={idx} className="flex flex-col items-center">
-              <img src={member.img} alt={member.name} className="w-32 h-32 rounded-full object-cover mb-3 border-4 border-[#e3eae3]" />
-              <div className="font-semibold text-gray-900">{member.name}</div>
-              <div className="text-gray-500 text-sm">{member.role}</div>
-            </div>
-          ))}
+
+        {/* Our Values */}
+        <div className="mb-16">
+          <div className="inline-flex items-center gap-2 bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-900/30 text-teal-700 dark:text-teal-400 px-4 py-1.5 rounded-full text-sm font-bold mb-4">
+            Our Values
+          </div>
+          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">What We Stand For</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {values.map((v, idx) => (
+              <div key={idx} className="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800/80 shadow-sm p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center mb-4 shadow-lg shadow-teal-500/20 group-hover:scale-110 transition-transform duration-300">
+                  {v.icon}
+                </div>
+                <div className="font-bold text-lg mb-2 text-slate-900 dark:text-white">{v.title}</div>
+                <div className="text-slate-505 dark:text-slate-400 text-sm leading-relaxed">{v.desc}</div>
+              </div>
+            ))}
+          </div>
         </div>
-        <h2 className="text-xl font-bold mb-4">Our Technology</h2>
-        <p className="text-gray-700 text-base mb-10 max-w-3xl">Our platform utilizes advanced technology to ensure a seamless and secure experience. We employ robust authentication and verification processes to build trust between buyers and sellers. Our smart matching algorithms connect users with products that align with their preferences and values.</p>
-        <h2 className="text-xl font-bold mb-4">Our Impact</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {impact.map((stat) => (
-            <div key={stat.label} className="bg-white rounded-2xl p-8 flex flex-col items-center">
-              <div className="mb-2 flex items-center">{stat.icon}<span className="text-3xl font-extrabold text-gray-900">{stat.value}</span></div>
-              <div className="text-gray-500 text-base font-medium">{stat.label}</div>
+
+        {/* Our Team */}
+        <div className="mb-16">
+          <div className="inline-flex items-center gap-2 bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-900/30 text-teal-700 dark:text-teal-400 px-4 py-1.5 rounded-full text-sm font-bold mb-4">
+            Our Team
+          </div>
+          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-8 tracking-tight">Meet the People Behind ReTrust+</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {team.map((member, idx) => (
+              <div key={idx} className="group flex flex-col items-center">
+                <div className="relative mb-4">
+                  <div className="absolute -inset-1 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-full opacity-70 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
+                  <div className="relative p-1 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-full">
+                    <img src={member.img} alt={member.name} className="w-28 h-28 rounded-full object-cover border-3 border-white dark:border-slate-900" />
+                  </div>
+                </div>
+                <div className="font-bold text-slate-900 dark:text-white text-center">{member.name}</div>
+                <div className="text-slate-400 dark:text-slate-500 text-sm">{member.role}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Our Technology */}
+        <div className="mb-16">
+          <div className="inline-flex items-center gap-2 bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-900/30 text-teal-700 dark:text-teal-400 px-4 py-1.5 rounded-full text-sm font-bold mb-4">
+            Technology
+          </div>
+          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">Built for the Future</h2>
+          <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-slate-100 dark:border-slate-800/80 shadow-sm p-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-teal-500/10 to-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="flex items-start gap-4 relative z-10">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-teal-500/20">
+                <Cpu className="w-6 h-6 text-white" />
+              </div>
+              <p className="text-slate-650 dark:text-slate-400 text-base leading-relaxed">Our platform utilizes advanced technology to ensure a seamless and secure experience. We employ robust authentication and verification processes to build trust between buyers and sellers. Our smart matching algorithms connect users with products that align with their preferences and values.</p>
             </div>
-          ))}
+          </div>
+        </div>
+
+        {/* Our Impact */}
+        <div className="mb-8">
+          <div className="inline-flex items-center gap-2 bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-900/30 text-teal-700 dark:text-teal-400 px-4 py-1.5 rounded-full text-sm font-bold mb-4">
+            Our Impact
+          </div>
+          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">Making a Difference</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {impact.map((stat) => (
+              <div key={stat.label} className="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800/80 shadow-sm p-8 flex flex-col items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center mb-4 shadow-lg shadow-teal-500/20 group-hover:scale-110 transition-transform duration-300">
+                  {stat.icon}
+                </div>
+                <span className="text-3xl font-extrabold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-1">{stat.value}</span>
+                <div className="text-slate-505 dark:text-slate-400 text-base font-medium">{stat.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -104,4 +153,4 @@ const AboutPage = () => (
   </>
 );
 
-export default AboutPage; 
+export default AboutPage;

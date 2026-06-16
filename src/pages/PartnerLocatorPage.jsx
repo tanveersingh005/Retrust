@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { MapPin, Search, Building2, Users, ArrowRight, Loader2 } from 'lucide-react';
 import Footer from '../components/Footer';
 import PartnerMap from '../components/PartnerMap';
 import PartnerCard from '../components/PartnerCard';
@@ -126,37 +127,99 @@ const PartnerLocatorPage = () => {
 
   return (
     <>
-      <div className="bg-[#f7faf7] min-h-screen w-full pt-24 pb-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-8">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-8 tracking-tight text-center">Find Sustainable Partners Near You</h1>
-          <input
-            type="text"
-            value={location}
-            onChange={handleLocationChange}
-            placeholder="Enter your location"
-            className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-white mb-4 focus:outline-none focus:ring-2 focus:ring-[#2196f3]/30 text-base"
-          />
-          <PartnerMap partners={partners} onMarkerDrag={handleMarkerDrag} markerPos={markerPos} />
+      <div className="bg-slate-50 dark:bg-slate-950 min-h-screen w-full pt-28 pb-16 relative overflow-hidden transition-colors duration-300">
+        {/* Decorative blur orbs */}
+        <div className="absolute top-20 left-1/4 w-72 h-72 bg-teal-500/10 dark:bg-teal-500/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-32 right-1/4 w-96 h-96 bg-emerald-500/10 dark:bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 relative z-10">
+          {/* Header Section */}
+          <div className="text-center mb-10">
+            <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-teal-50 dark:bg-teal-950/40 border border-teal-100 dark:border-teal-900/40 text-teal-700 dark:text-teal-400 text-sm font-bold mb-4">
+              <Users className="w-3.5 h-3.5" />
+              Partner Network
+            </span>
+            <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Find Sustainable Partners{' '}
+              <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">Near You</span>
+            </h1>
+            <p className="mt-3 text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto">
+              Locate trusted recycling centers, refurbishment partners, and eco-friendly services in your area.
+            </p>
+          </div>
+
+          {/* Search Input */}
+          <div className="relative mb-6">
+            <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+              <MapPin className="w-5 h-5 text-slate-400" />
+            </div>
+            <input
+              type="text"
+              value={location}
+              onChange={handleLocationChange}
+              placeholder="Enter your location..."
+              className="w-full pl-14 pr-12 py-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-base text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-500/5 shadow-sm transition-all duration-200"
+            />
+            <div className="absolute inset-y-0 right-0 pr-5 flex items-center pointer-events-none">
+              <Search className="w-4.5 h-4.5 text-slate-300 dark:text-slate-650" />
+            </div>
+          </div>
+
+          {/* Map Section */}
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm p-4 mb-6 overflow-hidden">
+            <PartnerMap partners={partners} onMarkerDrag={handleMarkerDrag} markerPos={markerPos} />
+          </div>
+
+          {/* Selected Address */}
           {markerAddress && (
-            <div className="mb-4 text-center text-gray-700 font-medium">Selected Address: {markerAddress}</div>
+            <div className="mb-6 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur border border-slate-100 dark:border-slate-800 shadow-sm">
+              <MapPin className="w-4 h-4 text-teal-600 dark:text-teal-400 flex-shrink-0" />
+              <span className="text-slate-700 dark:text-slate-300 font-medium text-sm">
+                Selected Address: <span className="text-slate-900 dark:text-white">{markerAddress}</span>
+              </span>
+            </div>
           )}
-          <div className="mb-8">
-            <h2 className="text-xl font-bold mb-4">Local Partners</h2>
-            {loading && <div className="text-blue-600 font-semibold mb-4">Searching for centers...</div>}
+
+          {/* Local Partners Section */}
+          <div className="mb-10">
+            <div className="flex items-center gap-2.5 mb-5">
+              <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-500 shadow-sm">
+                <Building2 className="w-4.5 h-4.5 text-white" />
+              </div>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Local Partners</h2>
+            </div>
+
+            {loading && (
+              <div className="flex items-center gap-2.5 px-5 py-4 rounded-2xl bg-teal-50/60 dark:bg-teal-950/20 border border-teal-100 dark:border-teal-900/40 mb-5">
+                <Loader2 className="w-5 h-5 text-teal-600 dark:text-teal-400 animate-spin" />
+                <span className="text-teal-700 dark:text-teal-400 font-semibold">Searching for centers...</span>
+              </div>
+            )}
+
             {partners.length === 0 && !loading && (
               <>
-                <div className="text-gray-500 mb-4">No partners found nearby. Here are some trusted centers you can contact:</div>
+                <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm p-5 mb-5">
+                  <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                    No partners found nearby. Here are some trusted centers you can contact:
+                  </p>
+                </div>
                 {HARDCODED_PARTNERS.map((partner, idx) => (
                   <PartnerCard key={idx} partner={partner} onSchedule={handleSchedule} />
                 ))}
               </>
             )}
+
             {partners.map((partner, idx) => (
               <PartnerCard key={idx} partner={partner} onSchedule={handleSchedule} />
             ))}
           </div>
+
+          {/* View All Partners Button */}
           <div className="flex justify-center">
-            <button className="px-6 py-3 rounded-lg bg-[#2196f3] text-white font-semibold shadow hover:bg-[#1769aa] transition-colors">View All Partners</button>
+            <button className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-semibold shadow-md hover:shadow-xl hover:shadow-teal-500/20 hover:-translate-y-0.5 transition-all duration-300">
+              View All Partners
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
+            </button>
           </div>
         </div>
       </div>
@@ -165,4 +228,4 @@ const PartnerLocatorPage = () => {
   );
 };
 
-export default PartnerLocatorPage; 
+export default PartnerLocatorPage;

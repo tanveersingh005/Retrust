@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import PacmanLoader from 'react-spinners/PacmanLoader';
 import PartnerMap from '../components/PartnerMap';
 import PartnerCard from '../components/PartnerCard';
+import { ArrowLeft, Leaf, ShieldCheck, Coins, RefreshCw } from 'lucide-react';
 
 const EwasteDetailPage = () => {
   const { id } = useParams();
@@ -36,10 +37,10 @@ const EwasteDetailPage = () => {
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[40vh]">
-      <PacmanLoader color="#15803d" size={32} speedMultiplier={4} />
+      <PacmanLoader color="#0d9488" size={12} speedMultiplier={2} />
     </div>
   );
-  if (!product) return <div className="p-8 text-center text-red-600">Product not found.</div>;
+  if (!product) return <div className="p-8 text-center text-rose-600 font-semibold text-sm bg-rose-50 rounded-2xl max-w-sm mx-auto">Product details not found.</div>;
 
   const handleRedeem = async () => {
     try {
@@ -149,93 +150,162 @@ const EwasteDetailPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f7faf7] flex flex-col items-center pt-16 pb-8">
+    <div className="space-y-6 animate-fade-in-up transition-colors duration-300">
       <button
-        className="mb-8 px-6 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition-colors"
+        className="group flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-350 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all shadow-sm"
         onClick={() => navigate(-1)}
       >
-        &larr; Back to E-Waste Tracking
+        <ArrowLeft className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+        <span>Back to Tracking</span>
       </button>
-      <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-2xl w-full border border-[#e0e7ef] flex flex-col items-center">
-        <h1 className="text-2xl font-bold mb-8 text-center w-full">Product Return Details</h1>
-        <div className="flex flex-col md:flex-row items-center gap-8 w-full mb-8">
-          <div className="flex-shrink-0 flex items-center justify-center">
-            {(product.images && product.images.length > 0) ? (
-              <img
-                src={product.images[0]}
-                alt="Product"
-                className="w-32 h-32 object-cover rounded-2xl border bg-gray-50 shadow"
-              />
-            ) : (
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/1829/1829586.png"
-                alt="No product"
-                className="w-32 h-32 object-cover rounded-2xl border bg-gray-50 shadow"
-              />
-            )}
-          </div>
-          <div className="flex-1 flex flex-col gap-2 text-lg">
-            <div><span className="font-semibold">Item:</span> {product.item}</div>
-            <div><span className="font-semibold">Date:</span> {new Date(product.createdAt).toLocaleDateString()}</div>
-            <div className="flex items-center gap-2"><span className="font-semibold">Status:</span> <span className={`px-3 py-1 rounded-full font-semibold text-xs ${product.status === 'Recycled' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{product.status}</span></div>
-            <div><span className="font-semibold">Credits Earned:</span> {product.credits}</div>
-            <div><span className="font-semibold">Condition:</span> {product.condition || 'N/A'}</div>
-            <div><span className="font-semibold">CO₂ Saved:</span> {product.co2Saved || 'N/A'} kg</div>
-          </div>
-        </div>
-        <div className="flex flex-col md:flex-row gap-4 w-full justify-center mt-4">
-          {product.status === 'Recycled' && !user.creditHistory?.some(h => h.item === product.item && h.credits === product.credits) && (
-            <button
-              className="flex-1 px-6 py-3 rounded-lg bg-green-600 text-white font-bold shadow hover:bg-green-700 transition-colors text-lg"
-              onClick={handleRedeem}
-            >
-              Redeem Credits
-            </button>
+
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/60 dark:border-slate-800/80 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+        {/* Decorative background gradients */}
+        <div className="absolute top-0 right-0 w-40 h-40 bg-teal-500/5 dark:bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
+
+        {/* Product Image */}
+        <div className="w-full md:w-48 aspect-square rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-850 bg-slate-50 dark:bg-slate-950 flex items-center justify-center shrink-0">
+          {(product.images && product.images.length > 0) ? (
+            <img
+              src={product.images[0]}
+              alt="Product"
+              className="w-full h-full object-contain"
+            />
+          ) : (
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/1829/1829586.png"
+              alt="No product"
+              className="w-24 h-24 object-contain opacity-50"
+            />
           )}
-          <button
-            className="flex-1 px-6 py-3 rounded-lg bg-blue-600 text-white font-bold shadow hover:bg-blue-700 transition-colors text-lg"
-            onClick={handleOpenModal}
-          >
-            Explore Nearby Centers
-          </button>
+        </div>
+
+        {/* Product details */}
+        <div className="flex-1 space-y-4 w-full">
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mb-2">
+              {product.item}
+            </h2>
+            <div className="flex items-center gap-2">
+              <span className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] uppercase border tracking-wider ${
+                product.status === 'Recycled'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/30'
+                  : 'bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 border-amber-100 dark:border-amber-900/30'
+              }`}>
+                {product.status}
+              </span>
+              <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">Submitted on {new Date(product.createdAt).toLocaleDateString()}</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 text-xs">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 rounded-xl p-3 flex items-center gap-2.5">
+              <div className="p-1.5 rounded-lg bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 shrink-0">
+                <Coins className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider block leading-none">Incentives Value</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200 mt-1 block">{product.credits} cr</span>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 rounded-xl p-3 flex items-center gap-2.5">
+              <div className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 shrink-0">
+                <Leaf className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider block leading-none">Carbon Offset</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200 mt-1 block">{product.co2Saved || 0} kg</span>
+              </div>
+            </div>
+
+            <div className="col-span-2 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 rounded-xl p-3 flex items-center gap-2.5">
+              <div className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 shrink-0">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="text-[9px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider block leading-none">Graded Condition</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200 mt-1 block">{product.condition || 'Excellent'}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 pt-3 border-t border-slate-100 dark:border-slate-805">
+            {product.status === 'Recycled' && !user.creditHistory?.some(h => h.item === product.item && h.credits === product.credits) && (
+              <button
+                className="flex-1 py-3 bg-emerald-650 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md transition cursor-pointer flex items-center justify-center gap-1.5"
+                onClick={handleRedeem}
+              >
+                🪙 Redeem Credits
+              </button>
+            )}
+            <button
+              className="flex-1 py-3 bg-teal-650 hover:bg-teal-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md transition cursor-pointer flex items-center justify-center gap-1.5"
+              onClick={handleOpenModal}
+            >
+              📍 Explore Centers
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Map modal popup */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+            onClick={() => setShowModal(false)}
+          />
+
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-2xl max-w-2xl w-full p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto z-10 space-y-6 animate-fade-in">
             <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-3xl font-bold z-50"
+              className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-850 transition duration-200 text-lg"
               onClick={() => setShowModal(false)}
               aria-label="Close"
             >
               &times;
             </button>
-            <h2 className="text-xl font-bold mb-4 text-center">Nearby Recycling Centers</h2>
+
+            <div className="text-center">
+              <h2 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">Nearby Recycling Partners</h2>
+              <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">Submit your recycled device to a local center to finalize verification.</p>
+            </div>
+
             <input
               type="text"
               value={location}
               onChange={handleLocationChange}
-              placeholder="Enter your location"
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-white mb-4 focus:outline-none focus:ring-2 focus:ring-[#2196f3]/30 text-base"
+              placeholder="Enter pin code or city..."
+              className="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-white focus:outline-none focus:border-teal-500 focus:bg-white dark:focus:bg-slate-900 text-sm transition-all"
             />
+
             <PartnerMap partners={partners} onMarkerDrag={handleMarkerDrag} markerPos={markerPos} />
+
             {markerAddress && (
-              <div className="mb-4 text-center text-gray-700 font-medium">Selected Address: {markerAddress}</div>
+              <div className="text-xs text-center font-semibold text-slate-655 dark:text-slate-350 bg-slate-50 dark:bg-slate-955 border border-slate-200/50 dark:border-slate-800/80 rounded-xl p-3">
+                Selected Address: {markerAddress}
+              </div>
             )}
-            <div className="mb-8">
-              <h3 className="text-lg font-bold mb-2">Local Partners</h3>
-              {loadingPartners && <div className="text-blue-600 font-semibold mb-4">Searching for centers...</div>}
-              {partners.length === 0 && !loadingPartners && (
-                <>
-                  <div className="text-gray-500 mb-4">No partners found nearby. Here are some trusted centers you can contact:</div>
-                  {HARDCODED_PARTNERS.map((partner, idx) => (
+
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider">Local Partners</h3>
+              {loadingPartners && <div className="text-teal-600 dark:text-teal-400 font-semibold text-xs animate-pulse">Searching map entries...</div>}
+              
+              <div className="space-y-3">
+                {partners.length === 0 && !loadingPartners ? (
+                  <>
+                    <p className="text-slate-400 dark:text-slate-500 text-xs">No partners found nearby. Trusted drop-off contact coordinates:</p>
+                    {HARDCODED_PARTNERS.map((partner, idx) => (
+                      <PartnerCard key={idx} partner={partner} onSchedule={() => alert(`Schedule requested for ${partner.name}`)} />
+                    ))}
+                  </>
+                ) : (
+                  partners.map((partner, idx) => (
                     <PartnerCard key={idx} partner={partner} onSchedule={() => alert(`Schedule requested for ${partner.name}`)} />
-                  ))}
-                </>
-              )}
-              {partners.map((partner, idx) => (
-                <PartnerCard key={idx} partner={partner} onSchedule={() => alert(`Schedule requested for ${partner.name}`)} />
-              ))}
+                  ))
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -244,4 +314,4 @@ const EwasteDetailPage = () => {
   );
 };
 
-export default EwasteDetailPage; 
+export default EwasteDetailPage;

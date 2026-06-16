@@ -43,9 +43,9 @@ const ImpactDashboard = () => {
     progress: 75,
     nextLevel: 5,
     milestones: [
-      { icon: <img src="./assets/trophy.png" alt="First Product Returned" className="w-7 h-7 object-contain" />, label: 'First Product Returned', date: 'June 15, 2023' },
-      { icon: <img src="./assets/milestone2.png" alt="Reached Level 2" className="w-7 h-7 object-contain" />, label: 'Reached Level 2', date: 'July 20, 2023' },
-      { icon: <img src="./assets/milestone3.png" alt="Top 20% of Users" className="w-7 h-7 object-contain" />, label: 'Top 20% of Users', date: 'August 5, 2023' },
+      { icon: <img src="./assets/trophy.png" alt="First Product Returned" className="w-7 h-7 object-contain dark:invert" />, label: 'First Product Returned', date: 'June 15, 2023' },
+      { icon: <img src="./assets/milestone2.png" alt="Reached Level 2" className="w-7 h-7 object-contain dark:invert" />, label: 'Reached Level 2', date: 'July 20, 2023' },
+      { icon: <img src="./assets/milestone3.png" alt="Top 20% of Users" className="w-7 h-7 object-contain dark:invert" />, label: 'Top 20% of Users', date: 'August 5, 2023' },
     ],
   };
 
@@ -61,12 +61,12 @@ const ImpactDashboard = () => {
         const arr = [];
         if (returned === 0) {
           arr.push({
-            icon: <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Newbie" className="w-7 h-7 object-contain" />, label: 'Welcome! Start your eco journey.', date: ''
+            icon: <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Newbie" className="w-7 h-7 object-contain dark:invert" />, label: 'Welcome! Start your eco journey.', date: ''
           });
         } else {
-          if (returned >= 1) arr.push({ icon: <img src="./assets/trophy.png" alt="First Product Returned" className="w-7 h-7 object-contain" />, label: 'First Product Returned', date: '' });
-          if (returned >= 5) arr.push({ icon: <img src="./assets/milestone2.png" alt="Reached Level 2" className="w-7 h-7 object-contain" />, label: 'Reached Level 2', date: '' });
-          if (returned >= 10) arr.push({ icon: <img src="./assets/milestone3.png" alt="Top 20% of Users" className="w-7 h-7 object-contain" />, label: 'Top 20% of Users', date: '' });
+          if (returned >= 1) arr.push({ icon: <img src="./assets/trophy.png" alt="First Product Returned" className="w-7 h-7 object-contain dark:invert" />, label: 'First Product Returned', date: '' });
+          if (returned >= 5) arr.push({ icon: <img src="./assets/milestone2.png" alt="Reached Level 2" className="w-7 h-7 object-contain dark:invert" />, label: 'Reached Level 2', date: '' });
+          if (returned >= 10) arr.push({ icon: <img src="./assets/milestone3.png" alt="Top 20% of Users" className="w-7 h-7 object-contain dark:invert" />, label: 'Top 20% of Users', date: '' });
         }
         return arr;
       })()
@@ -74,9 +74,22 @@ const ImpactDashboard = () => {
 
   return (
     <>
-      <div className="bg-[#f7faf7] min-h-screen w-full pt-24 pb-12">
-        <div className="max-w-5xl mx-auto px-4 sm:px-8">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-8 tracking-tight text-center">Your Impact</h1>
+      <div className="bg-slate-50 dark:bg-slate-950 min-h-screen w-full pt-28 pb-16 relative overflow-hidden transition-colors duration-300">
+        {/* Background gradient bubbles */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-teal-500/5 dark:bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-5xl mx-auto px-6 sm:px-8 relative z-10">
+          <div className="mb-10 text-center max-w-xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/40 px-3.5 py-1.5 rounded-full">
+              Community Impact
+            </span>
+            <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-4 tracking-tight">Your Environmental Impact</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 leading-relaxed">
+              Every item returned, recycled, or purchased refurbished contributes to a greener planet. Track your progress below.
+            </p>
+          </div>
+
           <ImpactStats co2={co2} credits={credits} returned={returned} rank={rank} />
           <LevelProgress level={level} progress={progress} nextLevel={nextLevel} label={label} />
           <RedeemCredits />
@@ -88,4 +101,4 @@ const ImpactDashboard = () => {
   );
 };
 
-export default ImpactDashboard; 
+export default ImpactDashboard;

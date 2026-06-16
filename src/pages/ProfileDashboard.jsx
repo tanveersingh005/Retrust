@@ -1,44 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from '../context/useAuth';
-import { UserIcon, ArrowPathIcon, BellIcon } from "@heroicons/react/24/outline";
-import { HiOutlineHome } from "react-icons/hi2";
-import { TbRecycle } from "react-icons/tb";
-import { useNavigate, useLocation, Routes, Route } from "react-router-dom";
+import { Home, User, Coins, Recycle, Bell, ShoppingBag, LogOut, ArrowRight, Trash2, Mail, Phone, MapPin } from "lucide-react";
+import { useNavigate, useLocation, Routes, Route, Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import EwasteDetailPage from '../pages/EwasteDetailPage'; // (to be created)
+import EwasteDetailPage from '../pages/EwasteDetailPage';
 
 const sidebarItems = [
   {
     name: "Overview",
-    icon: <HiOutlineHome className="w-5 h-5 mr-2" />,
+    icon: Home,
     path: "/profile",
   },
   {
     name: "Edit Profile",
-    icon: <UserIcon className="w-5 h-5 mr-2" />,
+    icon: User,
     path: "/profile/edit",
   },
   {
     name: "My Credits",
-    icon: <ArrowPathIcon className="w-5 h-5 mr-2" />,
+    icon: Coins,
     path: "/profile/credits",
   },
   {
     name: "E-Waste",
-    icon: <TbRecycle className="w-5 h-5 mr-2" />,
+    icon: Recycle,
     path: "/profile/ewaste",
   },
   {
     name: "Notifications",
-    icon: <BellIcon className="w-5 h-5 mr-2" />, // We'll add badge logic below
+    icon: Bell,
     path: "/profile/notifications",
   },
   {
     name: "Order History",
-    icon: <ArrowPathIcon className="w-5 h-5 mr-2" />,
+    icon: ShoppingBag,
     path: "/profile/orders",
   },
 ];
@@ -68,117 +66,180 @@ const EditProfileSection = () => {
     }
   };
 
-  const handleSave = e => { e.preventDefault(); updateProfile(form); };
+  const handleSave = e => {
+    e.preventDefault();
+    updateProfile(form);
+  };
 
   return (
-    <>
-    <div>
-      <h1 className="text-3xl font-bold mb-8">Edit Profile</h1>
-      <form className="max-w-xl flex flex-col gap-6">
-        <div className="flex items-center gap-6 mb-2">
-          <img src={avatarPreview || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} alt="Avatar Preview" className="w-20 h-20 rounded-full object-cover border-4 border-[#e3eae3]" />
-          <label className="block">
-            <span className="sr-only">Choose profile photo</span>
-            <input type="file" accept="image/*" onChange={handleAvatarChange} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#e6f4ea] file:text-gray-700 hover:file:bg-[#cde9d6]" />
-          </label>
+    <div className="space-y-8 animate-fade-in-up">
+      <div>
+        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Edit Profile</h1>
+        <p className="text-slate-400 text-xs mt-1">Manage your identity settings and physical coordinates.</p>
+      </div>
+
+      <form onSubmit={handleSave} className="max-w-2xl bg-white border border-slate-200/60 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-slate-100">
+          <img
+            src={avatarPreview || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}
+            alt="Avatar Preview"
+            className="w-20 h-20 rounded-full object-cover border-4 border-slate-100 shadow-sm shrink-0"
+          />
+          <div className="space-y-2 text-center sm:text-left">
+            <span className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Choose Profile Avatar</span>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 transition duration-150 cursor-pointer"
+            />
+          </div>
         </div>
-        <div>
-          <label className="block mb-1 font-medium text-gray-800">Full Name</label>
-          <input name="name" value={form.name} onChange={handleChange} className="w-full px-4 py-2 rounded-full border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 text-base" autoComplete="off" />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Full Name</label>
+            <div className="relative">
+              <User className="absolute left-4 top-3.5 w-4 h-4 text-slate-400" />
+              <input
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-teal-500 focus:bg-white text-sm transition-all"
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Email Address</label>
+            <div className="relative">
+              <Mail className="absolute left-4 top-3.5 w-4 h-4 text-slate-400" />
+              <input
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-teal-500 focus:bg-white text-sm transition-all"
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Phone Number</label>
+            <div className="relative">
+              <Phone className="absolute left-4 top-3.5 w-4 h-4 text-slate-400" />
+              <input
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-teal-500 focus:bg-white text-sm transition-all"
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Postal Address</label>
+            <div className="relative">
+              <MapPin className="absolute left-4 top-3.5 w-4 h-4 text-slate-400" />
+              <input
+                name="address"
+                value={form.address}
+                onChange={handleChange}
+                className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:border-teal-500 focus:bg-white text-sm transition-all"
+                autoComplete="off"
+              />
+            </div>
+          </div>
         </div>
-        <div>
-          <label className="block mb-1 font-medium text-gray-800">Email</label>
-          <input name="email" value={form.email} onChange={handleChange} className="w-full px-4 py-2 rounded-full border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 text-base" autoComplete="off" />
-        </div>
-        <div>
-          <label className="block mb-1 font-medium text-gray-800">Phone Number</label>
-          <input name="phone" value={form.phone} onChange={handleChange} className="w-full px-4 py-2 rounded-full border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 text-base" autoComplete="off" />
-        </div>
-        <div>
-          <label className="block mb-1 font-medium text-gray-800">Address</label>
-          <input name="address" value={form.address} onChange={handleChange} className="w-full px-4 py-2 rounded-full border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 text-base" autoComplete="off" />
-        </div>
-        <div className="flex justify-cnter ">
-          <button type="submit" onClick={handleSave} className="px-8 py-3 rounded-xl bg-[#2196f3] text-white font-semibold hover:bg-[#1769aa] transition-colors">Save Changes</button>
+
+        <div className="pt-4 flex justify-end">
+          <button
+            type="submit"
+            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold text-sm shadow-md transition duration-200 cursor-pointer"
+          >
+            Save Changes
+          </button>
         </div>
       </form>
     </div>
-    </>
   );
 };
 
 const MyCreditsSection = () => {
   const { user } = useAuth();
-  // Total Credits Card
-  // Only use user.credits for display
-  // const credits = user?.credits || 0;
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-8">My Credits</h1>
-      {/* Total Credits Card */}
-      <div className="flex items-center gap-4 mb-10">
-        <div className="bg-[#f2f6fc] rounded-2xl shadow p-6 flex items-center gap-4 w-full max-w-md">
-          <div className="bg-green-200 rounded-full p-4">
-            <svg className="w-8 h-8 text-green-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M12 6v6l4 2" /></svg>
-          </div>
-          <div>
-            <div className="text-4xl font-extrabold text-gray-900">{user?.credits || 0}</div>
-            <div className="text-gray-600 font-medium">Total Credits</div>
-          </div>
+    <div className="space-y-8 animate-fade-in-up">
+      <div>
+        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Eco Credits Wallet</h1>
+        <p className="text-slate-400 text-xs mt-1">Track your recycle balance and transactions history.</p>
+      </div>
+
+      <div className="bg-white rounded-3xl border border-slate-200/60 p-6 shadow-sm max-w-md flex items-center gap-5">
+        <div className="w-14 h-14 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center shadow-inner shrink-0">
+          <Coins className="w-6 h-6" />
+        </div>
+        <div>
+          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Wallet Balance</span>
+          <span className="text-3xl font-black text-slate-800 tracking-tight mt-1 block">
+            {user?.credits || 0} <span className="text-xs font-bold text-teal-600">credits</span>
+          </span>
         </div>
       </div>
-      {/* Credit History and Redeemed Credits */}
-      <div className="grid md:grid-cols-2 gap-8">
-        {/* Credit History */}
-        <div>
-          <h2 className="text-xl font-bold mb-2">Credit History</h2>
-          <div className="overflow-x-auto rounded-2xl shadow bg-white border border-gray-100">
-            <table className="min-w-full">
-              <thead>
-                <tr className="text-left text-gray-600 bg-gray-50">
-                  <th className="px-4 py-3">Item</th>
-                  <th className="px-4 py-3">Date</th>
-                  <th className="px-4 py-3">CO₂ Impact</th>
-                  <th className="px-4 py-3">Credits</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(user.creditHistory || []).map((row, i) => (
-                  <tr key={i} className="hover:bg-green-50">
-                    <td className="px-4 py-3">{row.item}</td>
-                    <td className="px-4 py-3 text-blue-600">{row.date}</td>
-                    <td className="px-4 py-3">{row.co2Impact}</td>
-                    <td className="px-4 py-3 font-bold text-green-600">{row.credits > 0 ? '+' : ''}{row.credits}</td>
-                  </tr>
+
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+        <div className="space-y-4">
+          <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Earn Log</h2>
+          {user.creditHistory && user.creditHistory.length > 0 ? (
+            <div className="bg-white border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm">
+              <div className="divide-y divide-slate-100">
+                {user.creditHistory.map((row, i) => (
+                  <div key={i} className="p-4 flex items-center justify-between hover:bg-slate-50 transition duration-150">
+                    <div className="space-y-0.5">
+                      <span className="font-bold text-slate-800 text-sm">{row.item}</span>
+                      <span className="text-[10px] text-slate-400 block">{new Date(row.date).toLocaleDateString()}</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs font-bold text-emerald-600">+{row.credits} cr</span>
+                      <span className="text-[10px] text-slate-400 block font-medium">Offset {row.co2Impact}</span>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </div>
+            </div>
+          ) : (
+            <div className="p-10 border border-dashed border-slate-200 rounded-3xl text-center text-slate-400 text-xs">
+              No recycle earnings recorded yet.
+            </div>
+          )}
         </div>
-        {/* Redeemed Credits */}
-        <div>
-          <h2 className="text-xl font-bold mb-2">Redeemed Credits</h2>
-          <div className="overflow-x-auto rounded-2xl shadow bg-white border border-gray-100">
-            <table className="min-w-full">
-              <thead>
-                <tr className="text-left text-gray-600 bg-gray-50">
-                  <th className="px-4 py-3">Item</th>
-                  <th className="px-4 py-3">Date</th>
-                  <th className="px-4 py-3">Credits</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(user.redeemedCredits || []).map((row, i) => (
-                  <tr key={i} className="hover:bg-yellow-50">
-                    <td className="px-4 py-3">{row.item}</td>
-                    <td className="px-4 py-3 text-blue-600">{row.date}</td>
-                    <td className="px-4 py-3 font-bold text-yellow-600">{row.credits > 0 ? '+' : ''}{row.credits}</td>
-                  </tr>
+
+        <div className="space-y-4">
+          <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Redeem Log</h2>
+          {user.redeemedCredits && user.redeemedCredits.length > 0 ? (
+            <div className="bg-white border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm">
+              <div className="divide-y divide-slate-100">
+                {user.redeemedCredits.map((row, i) => (
+                  <div key={i} className="p-4 flex items-center justify-between hover:bg-slate-50 transition duration-150">
+                    <div className="space-y-0.5">
+                      <span className="font-bold text-slate-800 text-sm">{row.item}</span>
+                      <span className="text-[10px] text-slate-400 block">{new Date(row.date).toLocaleDateString()}</span>
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-amber-600">{row.credits} cr</span>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </div>
+            </div>
+          ) : (
+            <div className="p-10 border border-dashed border-slate-200 rounded-3xl text-center text-slate-400 text-xs">
+              No vouchers redeemed yet.
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -187,7 +248,7 @@ const MyCreditsSection = () => {
 
 const OverviewSection = () => {
   const { user } = useAuth();
-  // Level logic (reuse from ImpactDashboard)
+  
   const getLevelInfo = (co2, credits, returned) => {
     if (co2 === 0 && credits === 0 && returned === 0) {
       return { level: 1, label: 'Newbie' };
@@ -201,142 +262,103 @@ const OverviewSection = () => {
       return { level: 5, label: 'Eco-Legend' };
     }
   };
+
   const co2 = user?.CO2_saved || 0;
   const credits = user?.credits || 0;
   const returned = user?.productsReturned || 0;
   const { label } = getLevelInfo(co2, credits, returned);
+
   return (
-    <div className="flex flex-col md:flex-row gap-10">
-      {/* Left: Main content */}
-      <div className="flex-1">
-        {/* User Card */}
-        <div className="flex items-center gap-6 mb-8">
-          <img
-            src={user?.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}
-            alt={user?.name}
-            className="w-24 h-24 rounded-full object-cover border-4 border-[#e3eae3]"
-          />
-          <div>
-            <div className="text-2xl font-bold text-gray-900">{user?.name}</div>
-            <div className="text-gray-600 text-sm mb-1">Member since 2025</div>
-            <div className="text-gray-700 text-base">{user?.email}</div>
-          </div>
+    <div className="space-y-8 animate-fade-in-up">
+      <div className="bg-white rounded-3xl border border-slate-200/60 p-6 sm:p-8 shadow-sm flex flex-col sm:flex-row items-center gap-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/5 rounded-full blur-2xl pointer-events-none" />
+        
+        <img
+          src={user?.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}
+          alt={user?.name}
+          className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-slate-100 shadow-sm shrink-0"
+        />
+        <div className="text-center sm:text-left space-y-1 flex-1">
+          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight leading-none">{user?.name}</h2>
+          <span className="text-xs font-bold text-teal-600 block">Eco-Member Rank: {label}</span>
+          <p className="text-slate-400 text-xs leading-normal mt-2">{user?.email}</p>
         </div>
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-          <div className="bg-white rounded-xl p-5 flex flex-col items-center border border-[#e3eae3]">
-            <div className="text-2xl font-extrabold text-gray-900 mb-1">
-              {co2} kg
-            </div>
-            <div className="text-gray-600 text-sm">CO₂ Saved</div>
-          </div>
-          <div className="bg-white rounded-xl p-5 flex flex-col items-center border border-[#e3eae3]">
-            <div className="text-2xl font-extrabold text-gray-900 mb-1">
-              {credits}
-            </div>
-            <div className="text-gray-600 text-sm">Credits Earned</div>
-          </div>
-          <div className="bg-white rounded-xl p-5 flex flex-col items-center border border-[#e3eae3]">
-            <div className="text-2xl font-extrabold text-gray-900 mb-1">{returned}</div>
-            <div className="text-gray-600 text-sm">Items Returned</div>
-          </div>
-          <div className="bg-white rounded-xl p-5 flex flex-col items-center border border-[#e3eae3]">
-            <div className="text-2xl font-extrabold text-gray-900 mb-1">
-              {label}
-            </div>
-            <div className="text-gray-600 text-sm">Eco-Level</div>
-          </div>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white border border-slate-200/60 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
+          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">CO₂ Saved</span>
+          <span className="text-lg font-black text-slate-800 block mt-2">{co2} kg</span>
         </div>
-        {/* Quick Actions */}
-        <div className="mb-10">
-          <div className="font-bold text-lg mb-4">Quick Actions</div>
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Credits Wallet */}
-            <div>
-              <div className="text-gray-700 font-semibold">Credits Wallet</div>
-              <div className="font-bold">View your credits</div>
-              <div className="text-gray-500 text-sm mb-2">
-                Check your balance and transaction history.
-              </div>
-              <button
-                onClick={() => (window.location.href = "/profile/credits")}
-                className="px-4 py-2 rounded-full bg-[#e6f4ea] text-gray-900 font-semibold hover:bg-[#cde9d6] transition-colors flex items-center gap-2"
-              >
-                View Wallet <span>&rarr;</span>
-              </button>
+        <div className="bg-white border border-slate-200/60 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
+          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Eco Credits</span>
+          <span className="text-lg font-black text-slate-800 block mt-2">{credits} cr</span>
+        </div>
+        <div className="bg-white border border-slate-200/60 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
+          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Recycles</span>
+          <span className="text-lg font-black text-slate-800 block mt-2">{returned} items</span>
+        </div>
+        <div className="bg-white border border-slate-200/60 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
+          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Grade Level</span>
+          <span className="text-lg font-black text-slate-800 block mt-2">{label}</span>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Platform Hub</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white rounded-3xl border border-slate-200/60 p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+            <div className="space-y-2">
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Credits</span>
+              <h4 className="font-extrabold text-slate-800 text-base">Credits Wallet</h4>
+              <p className="text-slate-500 text-xs leading-relaxed">
+                Check balance statements and view historical recycle incentives.
+              </p>
             </div>
-            <div className="flex items-center justify-center">
-              <img
-                src="./assets/image2.png"
-                alt="Wallet"
-                className="rounded-xl w-28 h-28 object-cover bg-[#f9f6f2]"
-              />
+            <Link
+              to="/profile/credits"
+              className="mt-6 flex items-center gap-1 text-xs font-bold text-teal-600 hover:text-teal-700 transition"
+            >
+              <span>Open Wallet</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="bg-white rounded-3xl border border-slate-200/60 p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+            <div className="space-y-2">
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Impact</span>
+              <h4 className="font-extrabold text-slate-800 text-base">Carbon Dashboard</h4>
+              <p className="text-slate-500 text-xs leading-relaxed">
+                View detailed environmental offset calculations and timelines.
+              </p>
             </div>
-            {/* Eco-Impact Dashboard */}
-            <div>
-              <div className="text-gray-700 font-semibold">
-                Eco-Impact Dashboard
-              </div>
-              <div className="font-bold">Track your impact</div>
-              <div className="text-gray-500 text-sm mb-2">
-                See your environmental contributions.
-              </div>
-              <button
-                onClick={() => (window.location.href = "/impact")}
-                className="px-4 py-2 rounded-full bg-[#e6f4ea] text-gray-900 font-semibold hover:bg-[#cde9d6] transition-colors flex items-center gap-2"
-              >
-                View Dashboard <span>&rarr;</span>
-              </button>
+            <Link
+              to="/impact"
+              className="mt-6 flex items-center gap-1 text-xs font-bold text-teal-600 hover:text-teal-700 transition"
+            >
+              <span>Open Dashboard</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="bg-white rounded-3xl border border-slate-200/60 p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+            <div className="space-y-2">
+              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Settings</span>
+              <h4 className="font-extrabold text-slate-800 text-base">Account Settings</h4>
+              <p className="text-slate-500 text-xs leading-relaxed">
+                Modify contact coordinates, phone numbers, and profile avatars.
+              </p>
             </div>
-            <div className="flex items-center justify-center">
-              <img
-                src="./assets/globe.jpg"
-                alt="Globe"
-                className="rounded-xl w-28 h-25 object-cover bg-[#f9f6f2]"
-              />
-            </div>
-            {/* Settings */}
-            <div>
-              <div className="text-gray-700 font-semibold">Settings</div>
-              <div className="font-bold">Manage your account</div>
-              <div className="text-gray-500 text-sm mb-2">
-                Update your profile and preferences.
-              </div>
-              <button
-                onClick={() => (window.location.href = "/profile/edit")}
-                className="px-4 py-2 rounded-full bg-[#e6f4ea] text-gray-900 font-semibold hover:bg-[#cde9d6] transition-colors flex items-center gap-2"
-              >
-                Go to Settings <span>&rarr;</span>
-              </button>
-            </div>
-            <div className="flex items-center justify-center">
-              <img
-                src="./assets/image.png"
-                alt="Plant"
-                className="rounded-xl w-28 h-26 object-cover bg-[#f9f6f2]"
-              />
-            </div>
+            <Link
+              to="/profile/edit"
+              className="mt-6 flex items-center gap-1 text-xs font-bold text-teal-600 hover:text-teal-700 transition"
+            >
+              <span>Manage Settings</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </div>
-      {/* Right: Images */}
-      {/* <div className="hidden md:flex flex-col gap-8 justify-center min-w-[220px]">
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-          alt="Wallet"
-          className="rounded-xl w-40 h-28 object-cover bg-[#f9f6f2]"
-        />
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/616/616494.png"
-          alt="Globe"
-          className="rounded-xl w-40 h-28 object-cover bg-[#f9f6f2]"
-        />
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/616/616408.png"
-          alt="Plant"
-          className="rounded-xl w-40 h-28 object-cover bg-[#f9f6f2]"
-        />
-      </div> */}
     </div>
   );
 };
@@ -371,7 +393,7 @@ const EWasteSection = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setReturns(returns => returns.map(r => r._id === id ? { ...r, status: newStatus } : r));
-      await fetchUser(token); // Refresh user data/notifications
+      await fetchUser(token);
       toast.success(`Status updated to '${newStatus}'`);
     } catch {
       toast.error('Failed to update status.');
@@ -396,7 +418,7 @@ const EWasteSection = () => {
       await axios.post(`${import.meta.env.VITE_API_URL}/returns/${id}/redeem`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      await fetchUser(token); // Update credits and notifications
+      await fetchUser(token);
       toast.success('Credits redeemed!');
     } catch {
       toast.error('Failed to redeem credits.');
@@ -408,7 +430,6 @@ const EWasteSection = () => {
     r.item.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Sorting logic
   const sorted = [...filtered].sort((a, b) => {
     if (sortOrder === 'newest') {
       return new Date(b.createdAt) - new Date(a.createdAt);
@@ -418,100 +439,132 @@ const EWasteSection = () => {
   });
 
   return (
-    <div>
+    <div className="space-y-8 animate-fade-in-up">
       <ToastContainer position="top-center" autoClose={2500} theme="colored" />
-      <h1 className="text-3xl font-bold mb-8">E-Waste Tracking</h1>
-      <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
+      
+      <div>
+        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">E-Waste Recycling Hub</h1>
+        <p className="text-slate-400 text-xs mt-1">Track and manage your recycle requests in real time.</p>
+      </div>
+
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200/60 rounded-3xl p-5 shadow-sm">
         <div className="flex gap-2">
           {['All', 'In Transit', 'Recycled'].map(s => (
             <button
               key={s}
-              className={`px-4 py-2 rounded-full font-semibold border transition-colors ${statusFilter === s ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-blue-50'}`}
+              className={`px-4 py-2 rounded-2xl text-xs font-bold transition duration-200 border cursor-pointer ${
+                statusFilter === s
+                  ? 'bg-teal-600 text-white border-teal-600 shadow-md shadow-teal-600/10'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-350'
+              }`}
               onClick={() => setStatusFilter(s)}
             >
               {s}
             </button>
           ))}
         </div>
-        <input
-          type="text"
-          placeholder="Search by item name..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-100 text-base w-full md:w-64"
-        />
-        <select
-          value={sortOrder}
-          onChange={e => setSortOrder(e.target.value)}
-          className="px-4 py-2 rounded-full border border-gray-300 text-base bg-white"
-        >
-          <option value="newest">Newest First</option>
-          <option value="oldest">Oldest First</option>
-        </select>
+        
+        <div className="flex flex-col sm:flex-row items-stretch gap-3">
+          <input
+            type="text"
+            placeholder="Search recycling log..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="px-4 py-2.5 rounded-xl border border-slate-250 bg-slate-50 focus:outline-none focus:border-teal-500 focus:bg-white text-xs w-full sm:w-56"
+          />
+          <select
+            value={sortOrder}
+            onChange={e => setSortOrder(e.target.value)}
+            className="px-4 py-2.5 rounded-xl border border-slate-250 bg-slate-50 focus:outline-none focus:border-teal-500 focus:bg-white text-xs cursor-pointer appearance-none pr-8 relative"
+          >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+        </div>
       </div>
-      {loading ? <div>Loading...</div> : (
-        <div className="overflow-x-auto mb-8">
-          <table className="min-w-full bg-white rounded-3xl border border-[#e3eae3] shadow-2xl">
-            <thead>
-              <tr className="text-left text-gray-700 bg-[#f7faf7]">
-                <th className="px-6 py-4 text-base font-bold">Image</th>
-                <th className="px-6 py-4 text-base font-bold">Item</th>
-                <th className="px-6 py-4 text-base font-bold">Date</th>
-                <th className="px-6 py-4 text-base font-bold">Status</th>
-                <th className="px-6 py-4 text-base font-bold">Credits Earned</th>
-                <th className="px-6 py-4 text-base font-bold">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sorted.map((row, i) => (
-                <tr key={i} className="border-t hover:bg-blue-50/30 transition">
-                  <td className="px-6 py-4">
-                    <img
-                      src={row.images && row.images.length > 0 ? row.images[0] : 'https://cdn-icons-png.flaticon.com/512/1829/1829586.png'}
-                      alt={row.item}
-                      className="w-16 h-16 object-cover rounded-2xl border shadow bg-gray-50"
-                    />
-                  </td>
-                  <td className="px-6 py-4 font-semibold text-lg">{row.item}</td>
-                  <td className="px-6 py-4 text-green-700 font-medium">{new Date(row.createdAt).toLocaleDateString()}</td>
-                  <td className="px-6 py-4">
-                    <span className={`px-4 py-1 rounded-full font-semibold text-xs shadow-sm border ${row.status === 'Recycled' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-gray-100 text-gray-800 border-gray-200'}`}>{row.status}</span>
-                  </td>
-                  <td className="px-6 py-4 text-green-700 font-bold text-lg">{row.credits}</td>
-                  <td className="px-6 py-4 flex flex-wrap gap-2 items-center min-w-[220px]">
-                    <select
-                      value={row.status}
-                      onChange={e => handleStatusUpdate(row._id, e.target.value)}
-                      className="px-3 py-2 rounded-lg border border-gray-300 text-sm bg-white shadow focus:ring-2 focus:ring-blue-100"
-                    >
-                      <option value="In Transit">In Transit</option>
-                      <option value="Recycled">Recycled</option>
-                    </select>
-                    <button
-                      className="px-4 py-2 rounded-lg bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 transition-colors text-sm shadow"
-                      onClick={() => navigate(`/ewaste/${row._id}`)}
-                    >
-                      View Details
-                    </button>
-                    <button
-                      className="px-4 py-2 rounded-lg bg-red-100 text-red-700 font-semibold hover:bg-red-200 transition-colors text-sm shadow"
-                      onClick={() => handleDelete(row._id)}
-                    >
-                      Delete
-                    </button>
-                    {row.status === 'Recycled' && !user.creditHistory?.some(h => h.item === row.item && h.credits === row.credits) && (
-                      <button
-                        className="px-4 py-2 rounded-lg bg-green-100 text-green-700 font-semibold hover:bg-green-200 transition-colors text-sm shadow"
-                        onClick={() => handleRedeem(row._id)}
-                      >
-                        Redeem Credits
-                      </button>
-                    )}
-                  </td>
+
+      {loading ? (
+        <div className="text-center py-12 text-slate-400 text-sm font-semibold">Searching logs...</div>
+      ) : sorted.length > 0 ? (
+        <div className="bg-white border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-slate-100">
+              <thead>
+                <tr className="bg-slate-50/50 text-left text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                  <th className="px-6 py-4">Product</th>
+                  <th className="px-6 py-4">Submission Date</th>
+                  <th className="px-6 py-4">Verify Status</th>
+                  <th className="px-6 py-4">Value</th>
+                  <th className="px-6 py-4 text-right">Controls</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-sm">
+                {sorted.map((row, i) => (
+                  <tr key={i} className="hover:bg-slate-50/40 transition">
+                    <td className="px-6 py-4 flex items-center gap-4">
+                      <img
+                        src={row.images && row.images.length > 0 ? row.images[0] : 'https://cdn-icons-png.flaticon.com/512/1829/1829586.png'}
+                        alt={row.item}
+                        className="w-12 h-12 object-contain rounded-xl border border-slate-100 bg-slate-50 shrink-0"
+                      />
+                      <span className="font-bold text-slate-800">{row.item}</span>
+                    </td>
+                    <td className="px-6 py-4 text-slate-500">
+                      {new Date(row.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2.5 py-1 rounded-full font-bold text-[10px] uppercase border tracking-wider ${
+                        row.status === 'Recycled'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                          : 'bg-amber-50 text-amber-700 border-amber-100'
+                      }`}>
+                        {row.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 font-bold text-slate-800">
+                      {row.credits} cr
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex flex-wrap items-center justify-end gap-2">
+                        <select
+                          value={row.status}
+                          onChange={e => handleStatusUpdate(row._id, e.target.value)}
+                          className="px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs bg-white focus:outline-none shadow-sm cursor-pointer"
+                        >
+                          <option value="In Transit">In Transit</option>
+                          <option value="Recycled">Recycled</option>
+                        </select>
+                        <button
+                          className="px-3 py-1.5 rounded-lg bg-teal-50 border border-teal-100 text-teal-700 hover:bg-teal-100 text-xs font-bold transition cursor-pointer"
+                          onClick={() => navigate(`/ewaste/${row._id}`)}
+                        >
+                          Details
+                        </button>
+                        <button
+                          className="p-1.5 rounded-lg border border-slate-100 text-slate-400 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-100 transition cursor-pointer"
+                          onClick={() => handleDelete(row._id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                        {row.status === 'Recycled' && !user.creditHistory?.some(h => h.item === row.item && h.credits === row.credits) && (
+                          <button
+                            className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition cursor-pointer"
+                            onClick={() => handleRedeem(row._id)}
+                          >
+                            Redeem
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        <div className="p-12 border border-dashed border-slate-200 rounded-3xl text-center text-slate-400 text-sm font-medium">
+          No recycling items in this filter criteria.
         </div>
       )}
     </div>
@@ -523,7 +576,7 @@ const ReturnsSection = () => {
   const [returns, setReturns] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchReturns = async () => {
       try {
         const res = await axios.get('/api/returns', {
@@ -539,36 +592,56 @@ const ReturnsSection = () => {
   }, [token]);
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-8">My Returns</h1>
-      {loading ? <div>Loading...</div> : (
-        <div className="overflow-x-auto mb-8">
-          <table className="min-w-full bg-white rounded-2xl border border-[#e3eae3] shadow">
-            <thead>
-              <tr className="text-left text-gray-700 bg-[#f7faf7]">
-                <th className="px-6 py-3">Item</th>
-                <th className="px-6 py-3">Condition</th>
-                <th className="px-6 py-3">CO₂ Saved</th>
-                <th className="px-6 py-3">Credits</th>
-                <th className="px-6 py-3">Status</th>
-                <th className="px-6 py-3">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {returns.map((row, i) => (
-                <tr key={i} className="border-t">
-                  <td className="px-6 py-4">{row.item}</td>
-                  <td className="px-6 py-4">{row.condition}</td>
-                  <td className="px-6 py-4">{row.co2Saved} kg</td>
-                  <td className="px-6 py-4">{row.credits}</td>
-                  <td className="px-6 py-4">
-                    <span className={`px-4 py-1 rounded-full font-semibold ${row.status === 'Recycled' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{row.status}</span>
-                  </td>
-                  <td className="px-6 py-4">{new Date(row.createdAt).toLocaleDateString()}</td>
+    <div className="space-y-8 animate-fade-in-up">
+      <div>
+        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Recycle Actions</h1>
+        <p className="text-slate-400 text-xs mt-1">Review your recycled entries statistics.</p>
+      </div>
+
+      {loading ? (
+        <div className="text-center py-10 text-slate-400 text-sm font-semibold">Loading log...</div>
+      ) : returns.length > 0 ? (
+        <div className="bg-white border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-slate-100 text-sm">
+              <thead>
+                <tr className="bg-slate-50/50 text-left text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                  <th className="px-6 py-4">Item</th>
+                  <th className="px-6 py-4">Condition</th>
+                  <th className="px-6 py-4">CO₂ Prevented</th>
+                  <th className="px-6 py-4">Credits</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {returns.map((row, i) => (
+                  <tr key={i} className="hover:bg-slate-50/40 transition">
+                    <td className="px-6 py-4 font-bold text-slate-800">{row.item}</td>
+                    <td className="px-6 py-4 text-slate-500">{row.condition}</td>
+                    <td className="px-6 py-4 text-emerald-600 font-semibold">{row.co2Saved} kg</td>
+                    <td className="px-6 py-4 font-bold text-slate-800">{row.credits}</td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-0.5 rounded-full font-bold text-[9px] uppercase border tracking-wider ${
+                        row.status === 'Recycled'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                          : 'bg-amber-50 text-amber-700 border-amber-100'
+                      }`}>
+                        {row.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-slate-500">
+                      {new Date(row.createdAt).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        <div className="p-12 border border-dashed border-slate-200 rounded-3xl text-center text-slate-400 text-sm font-medium">
+          No recycling listings saved.
         </div>
       )}
     </div>
@@ -577,33 +650,53 @@ const ReturnsSection = () => {
 
 const NotificationsSection = () => {
   const { user, updateProfile } = useAuth();
+
   useEffect(() => {
-    // Mark all notifications as read when viewing
     if (user?.notifications?.some(n => !n.read)) {
       const updated = user.notifications.map(n => ({ ...n, read: true }));
       updateProfile({ notifications: updated });
     }
-    // eslint-disable-next-line
   }, []);
+
   const sorted = [...(user.notifications || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-8">Notifications</h1>
-      <div className="text-gray-700">
-        {sorted.length > 0 ? (
-          <ul className="space-y-2">
-            {sorted.map((n, i) => (
-              <li key={i} className={`p-3 rounded flex items-center gap-3 ${n.read ? 'bg-gray-100' : 'bg-blue-50'}`}>
-                <BellIcon className="w-5 h-5 text-blue-400" />
-                <span className="font-medium">{n.message}</span>
-                <span className="ml-2 text-xs text-gray-500">{new Date(n.date).toLocaleString()}</span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div>No notifications yet.</div>
-        )}
+    <div className="space-y-8 animate-fade-in-up">
+      <div>
+        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Inbox Notifications</h1>
+        <p className="text-slate-400 text-xs mt-1">Updates on your recycle drop-offs and platform achievements.</p>
       </div>
+
+      {sorted.length > 0 ? (
+        <div className="space-y-3">
+          {sorted.map((n, i) => (
+            <div
+              key={i}
+              className={`p-4 rounded-2xl border flex items-start gap-4 transition ${
+                n.read
+                  ? 'bg-white border-slate-200/60 shadow-sm'
+                  : 'bg-teal-50/40 border-teal-100/60 shadow-md shadow-teal-500/5'
+              }`}
+            >
+              <div className={`p-2 rounded-xl shrink-0 ${n.read ? 'bg-slate-50 text-slate-400' : 'bg-teal-50 text-teal-600'}`}>
+                <Bell className="w-4 h-4" />
+              </div>
+              <div className="space-y-1 flex-1">
+                <p className={`text-xs sm:text-sm font-medium ${n.read ? 'text-slate-600' : 'text-slate-900 font-bold'}`}>
+                  {n.message}
+                </p>
+                <span className="text-[10px] text-slate-400 block">
+                  {new Date(n.date).toLocaleString()}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="p-12 border border-dashed border-slate-200 rounded-3xl text-center text-slate-400 text-sm font-medium">
+          Your notifications inbox is currently clean.
+        </div>
+      )}
     </div>
   );
 };
@@ -612,6 +705,7 @@ const OrderHistorySection = () => {
   const { token } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -626,51 +720,70 @@ const OrderHistorySection = () => {
     };
     fetchOrders();
   }, [token]);
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-8">Order History</h1>
+    <div className="space-y-8 animate-fade-in-up">
+      <div>
+        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Order Transactions</h1>
+        <p className="text-slate-400 text-xs mt-1">Review items purchased using your earned credits.</p>
+      </div>
+
       {loading ? (
-        <div className="text-gray-600 text-lg text-center py-20">Loading...</div>
+        <div className="text-center py-10 text-slate-400 text-sm font-semibold">Loading orders...</div>
       ) : orders.length === 0 ? (
-        <div className="text-gray-600 text-lg text-center py-20">No orders yet.</div>
+        <div className="p-12 border border-dashed border-slate-200 rounded-3xl text-center text-slate-400 text-sm font-medium">
+          You haven't placed any circular shop orders yet.
+        </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl shadow bg-white border border-gray-100">
-          <table className="min-w-full">
-            <thead>
-              <tr className="text-left text-gray-600 bg-gray-50">
-                <th className="px-4 py-3">Date</th>
-                <th className="px-4 py-3">Items</th>
-                <th className="px-4 py-3">Total</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Images</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order, i) => (
-                <tr key={i} className="border-t">
-                  <td className="px-4 py-3 text-blue-600">{new Date(order.date).toLocaleString()}</td>
-                  <td className="px-4 py-3">
-                    <ul className="list-disc ml-4">
-                      {order.items.map((item, idx) => (
-                        <li key={idx}>{item.name} x{item.qty}</li>
-                      ))}
-                    </ul>
-                  </td>
-                  <td className="px-4 py-3 font-bold">{order.total} credits</td>
-                  <td className="px-4 py-3">
-                    <span className={`px-3 py-1 rounded-full font-semibold text-xs shadow-sm border ${order.status === 'Delivered' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-gray-100 text-gray-800 border-gray-200'}`}>{order.status}</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2 flex-wrap">
-                      {order.images && order.images.length > 0 ? order.images.map((img, idx) => (
-                        <img key={idx} src={img} alt="item" className="w-10 h-10 object-cover rounded border" />
-                      )) : <span className="text-gray-400">-</span>}
-                    </div>
-                  </td>
+        <div className="bg-white border border-slate-200/60 rounded-3xl overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-slate-100 text-sm">
+              <thead>
+                <tr className="bg-slate-50/50 text-left text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                  <th className="px-6 py-4">Transaction Date</th>
+                  <th className="px-6 py-4">Items Purchased</th>
+                  <th className="px-6 py-4">Order Value</th>
+                  <th className="px-6 py-4">Fulfillment</th>
+                  <th className="px-6 py-4 text-right">Gallery</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {orders.map((order, i) => (
+                  <tr key={i} className="hover:bg-slate-50/40 transition">
+                    <td className="px-6 py-4 text-slate-500">
+                      {new Date(order.date).toLocaleString()}
+                    </td>
+                    <td className="px-6 py-4">
+                      <ul className="list-disc ml-4 space-y-0.5 text-xs font-semibold text-slate-700">
+                        {order.items.map((item, idx) => (
+                          <li key={idx}>{item.name} <span className="text-slate-400">x{item.qty}</span></li>
+                        ))}
+                      </ul>
+                    </td>
+                    <td className="px-6 py-4 font-bold text-slate-800">
+                      {order.total} cr
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-0.5 rounded-full font-bold text-[9px] uppercase border tracking-wider ${
+                        order.status === 'Delivered'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                          : 'bg-indigo-50 text-indigo-700 border-indigo-100'
+                      }`}>
+                        {order.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex gap-1.5 flex-wrap justify-end">
+                        {order.images && order.images.length > 0 ? order.images.map((img, idx) => (
+                          <img key={idx} src={img} alt="item" className="w-8 h-8 object-contain rounded border border-slate-100 bg-slate-50" />
+                        )) : <span className="text-slate-400">-</span>}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
@@ -682,56 +795,64 @@ const ProfileDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const unreadCount = user?.notifications?.filter(n => !n.read).length || 0;
+
   return (
     <>
-    <div className="bg-[#f7faf7] min-h-screen flex flex-col md:flex-row pt-8 pb-8">
-      {/* Sidebar */}
+    <div className="bg-slate-50 min-h-screen flex flex-col md:flex-row pt-24 pb-8">
       <aside
-        className="w-full md:w-72 bg-white md:bg-transparent flex flex-col items-center md:items-start px-4 md:px-10 pt-8 md:pt-16 border-b md:border-b-0 md:border-r border-gray-200 md:h-auto md:sticky md:top-0 overflow-y-auto max-h-[60vh] md:max-h-none"
+        className="w-full md:w-72 bg-white border-b md:border-b-0 md:border-r border-slate-200/80 flex flex-col items-stretch px-6 py-8 md:pt-12 md:h-auto shrink-0 md:sticky md:top-0 overflow-y-auto max-h-[60vh] md:max-h-none"
         style={{ minHeight: '0', flex: 'none' }}
       >
-        <div className="flex flex-col items-center md:items-start mb-8 md:mb-10 w-full">
+        <div className="flex flex-col items-center md:items-start mb-8 w-full border-b border-slate-100 pb-6">
           <img
             src={user?.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}
             alt={user?.name}
-            className="w-20 h-20 md:w-14 md:h-14 rounded-full object-cover mb-2"
+            className="w-16 h-16 rounded-full object-cover mb-3 shadow-sm"
           />
-          <span className="font-semibold text-lg text-gray-900 text-center md:text-left w-full break-words">
+          <span className="font-extrabold text-base text-slate-800 tracking-tight text-center md:text-left w-full break-words">
             {user?.name}
           </span>
+          <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider mt-0.5">Verified Eco Member</span>
         </div>
+
         <nav className="w-full flex flex-col gap-1">
-          {sidebarItems.map((item) => (
-            <button
-              key={item.name}
-              className={`flex items-center w-full px-4 py-2 rounded-lg text-base font-medium transition-colors ${
-                location.pathname === item.path
-                  ? "bg-[#e9eef2] text-gray-900"
-                  : "text-gray-700 hover:bg-gray-100"
-              }`}
-              onClick={() => navigate(item.path)}
-            >
-              {item.icon}
-              {item.name}
-              {item.name === 'Notifications' && unreadCount > 0 && (
-                <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-blue-500 rounded-full">{unreadCount}</span>
-              )}
-            </button>
-          ))}
+          {sidebarItems.map((item) => {
+            const IconComp = item.icon;
+            const isActive = location.pathname === item.path || (item.path === '/profile' && location.pathname === '/profile/');
+            return (
+              <button
+                key={item.name}
+                className={`flex items-center w-full px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-200 cursor-pointer ${
+                  isActive
+                    ? "bg-teal-50 text-teal-700 shadow-sm border-l-4 border-teal-500 pl-3"
+                    : "text-slate-600 hover:bg-slate-100 border-l-4 border-transparent"
+                }`}
+                onClick={() => navigate(item.path)}
+              >
+                <IconComp className="w-4.5 h-4.5 mr-2 shrink-0" />
+                <span className="flex-1 text-left">{item.name}</span>
+                {item.name === 'Notifications' && unreadCount > 0 && (
+                  <span className="inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-rose-500 rounded-full shrink-0 shadow-sm">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </nav>
-        {/* Divider and Sign Out button at the bottom */}
-        <div className="w-full flex-1"></div>
-        <div className="w-full mt-6 mb-2 border-t border-gray-200 pt-4 flex flex-col items-center">
+
+        <div className="w-full mt-auto pt-8 flex flex-col items-stretch">
           <button
-            className="w-full px-4 py-2 rounded-lg text-base font-medium text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+            className="w-full px-4 py-3 rounded-2xl text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 transition duration-200 cursor-pointer flex items-center justify-center gap-2"
             onClick={signOut}
           >
-            Sign Out
+            <LogOut className="w-4 h-4 shrink-0" />
+            <span>Sign Out</span>
           </button>
         </div>
       </aside>
-      {/* Main Content */}
-      <main className="flex-1 px-2 md:px-8 pt-20">
+
+      <main className="flex-grow px-6 sm:px-8 md:px-12 py-8 overflow-x-hidden">
         <Routes>
           <Route path="/" element={<OverviewSection />} />
           <Route path="/edit" element={<EditProfileSection />} />

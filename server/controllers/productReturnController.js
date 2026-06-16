@@ -2,10 +2,19 @@ import ProductReturn from '../models/ProductReturn.js';
 import User from '../models/User.js';
 
 // Create a new product return
-export const createReturn = async (req, res) => {
+export const createReturn = async (req, res, next) => {
   try {
     const { item, condition, images } = req.body;
-    // Example logic for CO2 and credits
+
+    // Input validation
+    if (!item || typeof item !== 'string' || item.trim().length === 0) {
+      return res.status(400).json({ message: 'Item name is required' });
+    }
+    if (!condition || !['Good', 'Average', 'Poor'].includes(condition)) {
+      return res.status(400).json({ message: 'Valid condition is required (Good, Average, or Poor)' });
+    }
+
+    // CO2 and credits calculation based on condition
     let co2Saved = 0, credits = 0;
     if (condition === 'Good') { co2Saved = 10; credits = 50; }
     else if (condition === 'Average') { co2Saved = 5; credits = 25; }
@@ -20,13 +29,13 @@ export const createReturn = async (req, res) => {
       status: 'In Transit'
     });
     res.status(201).json(productReturn);
-  } catch {
-    res.status(500).json({ message: 'Server error' });
+  } catch (err) {
+    next(err);
   }
 };
 
 // Update return status (admin/system)
-export const updateReturnStatus = async (req, res) => {
+export const updateReturnStatus = async (req, res, next) => {
   try {
     const { status } = req.body;
     const productReturn = await ProductReturn.findById(req.params.id);
@@ -45,13 +54,13 @@ export const updateReturnStatus = async (req, res) => {
       await user.save();
     }
     res.json(productReturn);
-  } catch {
-    res.status(500).json({ message: 'Server error' });
+  } catch (err) {
+    next(err);
   }
 };
 
 // Redeem credits for a completed return
-export const redeemCredits = async (req, res) => {
+export const redeemCredits = async (req, res, next) => {
   try {
     const productReturn = await ProductReturn.findById(req.params.id);
     if (!productReturn) return res.status(404).json({ message: 'Return not found' });
@@ -73,52 +82,47 @@ export const redeemCredits = async (req, res) => {
     });
     await user.save();
     res.json({ message: 'Credits redeemed', user });
-  } catch {
-    res.status(500).json({ message: 'Server error' });
+  } catch (err) {
+    next(err);
   }
 };
 
 // Delete a product return
-export const deleteReturn = async (req, res) => {
+export const deleteReturn = async (req, res, next) => {
   try {
-    console.log('DELETE request for return:', req.params.id);
     const productReturn = await ProductReturn.findById(req.params.id);
     if (!productReturn) {
-      console.log('Return not found');
       return res.status(404).json({ message: 'Return not found' });
     }
-    console.log('Found return:', productReturn);
-    console.log('Return user:', productReturn.user.toString(), 'Request user:', req.user.id);
     if (productReturn.user.toString() !== req.user.id) {
-      console.log('Not authorized');
       return res.status(403).json({ message: 'Not authorized' });
     }
     await productReturn.deleteOne();
-    console.log('Return deleted');
     res.json({ message: 'Return deleted' });
   } catch (err) {
-    console.log('Server error:', err);
-    res.status(500).json({ message: 'Server error' });
+    next(err);
   }
 };
 
 // Get all returns for the logged-in user
-export const getUserReturns = async (req, res) => {
+export const getUserReturns = async (req, res, next) => {
   try {
     const returns = await ProductReturn.find({ user: req.user.id });
     res.json(returns);
-  } catch {
-    res.status(500).json({ message: 'Server error' });
+  } catch (err) {
+    next(err);
   }
 };
 
-export const getReturnById = async (req, res) => {
+export const getReturnById = async (req, res, next) => {
   try {
     const productReturn = await ProductReturn.findById(req.params.id);
     if (!productReturn) return res.status(404).json({ message: 'Return not found' });
-    // Optionally, check if req.user.id === productReturn.user.toString() for security
+    if (productReturn.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
     res.json(productReturn);
-  } catch {
-    res.status(500).json({ message: 'Server error' });
+  } catch (err) {
+    next(err);
   }
 }; 
