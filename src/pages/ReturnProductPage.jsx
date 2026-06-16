@@ -6,7 +6,7 @@ import MLPredictionCard from '../components/MLPredictionCard';
 import ImpactSection from '../components/ImpactSection';
 import axios from 'axios';
 import { useAuth } from '../context/useAuth';
-import PacmanLoader from 'react-spinners/PacmanLoader';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PartnerMap from '../components/PartnerMap';
@@ -189,10 +189,7 @@ const ReturnProductPage = () => {
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
         {submitting && (
-          <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900/60 backdrop-blur-md">
-            <PacmanLoader color="#0d9488" size={16} speedMultiplier={2} />
-            <span className="mt-4 text-white font-bold text-sm tracking-wide animate-pulse">Processing your return...</span>
-          </div>
+          <LoadingSpinner text="Processing your return..." />
         )}
 
         <div className="max-w-4xl mx-auto px-6 sm:px-8 relative z-10">

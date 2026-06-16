@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ImageUploader from './ImageUploader';
-import PacmanLoader from 'react-spinners/PacmanLoader';
+import LoadingSpinner from './LoadingSpinner';
 
 const productTypes = ['Select Type', 'Clothing', 'Electronics', 'Accessories', 'Furniture'];
 const categories = ['Select Category', 'Jacket', 'T-Shirt', 'Shoes', 'Watch', 'Bag', 'Other'];
@@ -129,7 +129,7 @@ const ReturnForm = ({ onSubmit }) => {
 
       {loading && (
         <div className="flex flex-col items-center mt-4">
-          <PacmanLoader color="#0d9488" size={12} speedMultiplier={2} />
+          <LoadingSpinner inline size="sm" />
           <span className="mt-3 text-teal-800 dark:text-teal-400 font-bold text-xs animate-pulse">Uploading product photos...</span>
         </div>
       )}

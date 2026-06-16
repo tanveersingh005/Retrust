@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import PacmanLoader from 'react-spinners/PacmanLoader';
+import LoadingSpinner from './LoadingSpinner';
 import axios from 'axios';
 import { UploadCloud, X, Image as ImageIcon } from 'lucide-react';
 
@@ -86,7 +86,7 @@ const ImageUploader = ({ images, setImages, loading, setLoading }) => {
       {/* Uploading Status Overlay */}
       {loading && (
         <div className="mt-4 flex flex-col items-center justify-center p-6 bg-teal-50/50 dark:bg-teal-950/20 border border-teal-100 dark:border-teal-900/40 rounded-2xl animate-pulse">
-          <PacmanLoader color="#0d9488" size={12} speedMultiplier={2} />
+          <LoadingSpinner inline size="sm" />
           <span className="mt-4 text-teal-800 dark:text-teal-400 font-bold text-xs">Uploading images to secure vault...</span>
         </div>
       )}

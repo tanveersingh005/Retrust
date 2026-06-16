@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import PacmanLoader from 'react-spinners/PacmanLoader';
+import LoadingSpinner from '../components/LoadingSpinner';
 import PartnerMap from '../components/PartnerMap';
 import PartnerCard from '../components/PartnerCard';
 import { ArrowLeft, Leaf, ShieldCheck, Coins, RefreshCw } from 'lucide-react';
@@ -37,7 +37,7 @@ const EwasteDetailPage = () => {
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[40vh]">
-      <PacmanLoader color="#0d9488" size={12} speedMultiplier={2} />
+      <LoadingSpinner inline size="sm" />
     </div>
   );
   if (!product) return <div className="p-8 text-center text-rose-600 font-semibold text-sm bg-rose-50 rounded-2xl max-w-sm mx-auto">Product details not found.</div>;
